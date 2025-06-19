@@ -1,4 +1,7 @@
 [versions]
+compileSdk = "35"
+minSdk = "31"
+javaTarget = "17"
 agp = "8.10.1"
 kotlin = "2.0.21"
 coreKtx = "1.16.0"
@@ -34,6 +37,32 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomVersion" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomVersion" }
 ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "kspVersion" }
+
+[bundles]
+core = [
+    "androidx-core-ktx",
+    "androidx-lifecycle-runtime-ktx",
+]
+ui = [
+    "androidx-activity-compose",
+    "androidx-ui",
+    "androidx-ui-graphics",
+    "androidx-material3",
+    "androidx-ui-tooling-preview",
+]
+room = [
+    "androidx-room-runtime",
+    "androidx-room-ktx",
+]
+test = [
+    "androidx-junit",
+    "androidx-espresso-core",
+    "androidx-ui-test-junit4"
+]
+debug = [
+    "androidx-ui-test-manifest",
+    "androidx-ui-tooling",
+]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
