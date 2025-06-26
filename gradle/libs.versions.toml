@@ -10,11 +10,15 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
-composeBom = "2025.06.00"
+composeBom = "2025.06.01"
+composeNavigation = "2.9.0"
+material3Icons = "1.7.8"
 hiltViewModelVersion = "1.0.0-alpha03"
 androidxHilt = "1.2.0"
 roomVersion = "2.7.1"
 kspVersion = "2.0.21-1.0.27"
+serialization = "1.9.24"
+serializationCore = "1.7.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,24 +35,34 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-material3-icons = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "material3Icons" }
+androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "composeNavigation"}
+androidx-navigation-navigation-ui = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "composeNavigation"}
+androidx-navigation-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation"}
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "androidxHilt" }
 androidx-hilt-viewmodel = { module = "androidx.hilt:hilt-lifecycle-viewmodel", version.ref = "hiltViewModelVersion" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomVersion" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomVersion" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomVersion" }
 ksp = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "kspVersion" }
+serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serializationCore" }
 
 [bundles]
 core = [
     "androidx-core-ktx",
     "androidx-lifecycle-runtime-ktx",
+    "serialization"
 ]
 ui = [
     "androidx-activity-compose",
     "androidx-ui",
     "androidx-ui-graphics",
     "androidx-material3",
+    "androidx-material3-icons",
     "androidx-ui-tooling-preview",
+    "androidx-navigation-fragment",
+    "androidx-navigation-navigation-ui",
+    "androidx-navigation-navigation-compose"
 ]
 room = [
     "androidx-room-runtime",
@@ -70,3 +84,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization" }
