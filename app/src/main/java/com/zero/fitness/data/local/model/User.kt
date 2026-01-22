@@ -1,4 +1,4 @@
-package com.zero.fitness.repo.data.model
+package com.zero.fitness.data.local.model
 
 
 data class User (

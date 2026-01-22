@@ -1,6 +1,7 @@
-package com.zero.fitness.repo.data.source.local.db
+package com.zero.fitness.data.local.db
 
 import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 
 object DbMigrations {
