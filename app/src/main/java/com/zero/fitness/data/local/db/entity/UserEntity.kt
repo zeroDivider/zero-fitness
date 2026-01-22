@@ -1,8 +1,8 @@
-package com.zero.fitness.repo.data.source.local.db.user
+package com.zero.fitness.data.local.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.zero.fitness.repo.data.model.User
+import com.zero.fitness.data.local.model.User
 
 @Entity(tableName = "users")
 data class UserEntity(

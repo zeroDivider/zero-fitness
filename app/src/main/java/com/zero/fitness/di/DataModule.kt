@@ -2,8 +2,8 @@ package com.zero.fitness.di
 
 import android.app.Application
 import androidx.room.Room
-import com.zero.fitness.repo.data.source.local.db.AppDatabase
-import com.zero.fitness.repo.data.source.local.db.DbMigrations
+import com.zero.fitness.data.local.db.AppDatabase
+import com.zero.fitness.data.local.db.DbMigrations
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

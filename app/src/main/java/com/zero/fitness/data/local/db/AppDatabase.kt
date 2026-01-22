@@ -1,9 +1,9 @@
-package com.zero.fitness.repo.data.source.local.db
+package com.zero.fitness.data.local.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.zero.fitness.repo.data.source.local.db.user.UserDAO
-import com.zero.fitness.repo.data.source.local.db.user.UserEntity
+import com.zero.fitness.data.local.db.dao.UserDAO
+import com.zero.fitness.data.local.db.entity.UserEntity
 
 @Database(
     entities = [
