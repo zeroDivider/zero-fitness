@@ -24,20 +24,27 @@ import java.util.UUID
             onDelete = ForeignKey.RESTRICT
         ),
         ForeignKey(
-            entity = BlockStepEntity::class,
+            entity = WorkoutExerciseEntity::class,
             parentColumns = ["id"],
-            childColumns = ["stepId"],
+            childColumns = ["workoutExerciseId"],
             onDelete = ForeignKey.RESTRICT
+        ),
+        ForeignKey(
+            entity = PlannedSetEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["plannedSetId"],
+            onDelete = ForeignKey.SET_NULL
         )
     ],
-    indices = [Index("sessionId"), Index("blockId"), Index("stepId")]
+    indices = [Index("sessionId"), Index("blockId"), Index("workoutExerciseId"), Index("plannedSetId")]
 )
 data class SessionSetResultEntity(
     @PrimaryKey val id: UUID = UUID.randomUUID(),
     val sessionId: UUID,
 
     val blockId: UUID,
-    val stepId: UUID,
+    val workoutExerciseId: UUID,
+    val plannedSetId: UUID?,
 
     val roundIndex: Int? = null,
     val setOrderIndex: Int,
