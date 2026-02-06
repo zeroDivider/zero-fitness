@@ -11,17 +11,17 @@ import java.util.UUID
     tableName = "workout_sessions",
     foreignKeys = [
         ForeignKey(
-            entity = WorkoutTemplateEntity::class,
+            entity = WorkoutPlanEntity::class,
             parentColumns = ["id"],
-            childColumns = ["workoutTemplateId"],
+            childColumns = ["workoutPlanId"],
             onDelete = ForeignKey.SET_NULL
         )
     ],
-    indices = [Index("workoutTemplateId")]
+    indices = [Index("workoutPlanId")]
 )
 data class WorkoutSessionEntity(
     @PrimaryKey val id: UUID = UUID.randomUUID(),
-    val workoutTemplateId: UUID?,
+    val workoutPlanId: UUID?,
     val startedAtEpochMs: Long = System.currentTimeMillis(),
     val endedAtEpochMs: Long? = null,
     val notes: String? = null

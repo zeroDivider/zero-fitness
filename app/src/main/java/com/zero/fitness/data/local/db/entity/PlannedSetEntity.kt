@@ -10,20 +10,20 @@ import java.util.UUID
 
 
 @Entity(
-    tableName = "step_sets",
+    tableName = "planned_sets",
     foreignKeys = [
         ForeignKey(
-            entity = BlockStepEntity::class,
+            entity = WorkoutExerciseEntity::class,
             parentColumns = ["id"],
-            childColumns = ["stepId"],
+            childColumns = ["workoutExerciseId"],
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index("stepId")]
+    indices = [Index("workoutExerciseId")]
 )
-data class StepSetEntity(
+data class PlannedSetEntity(
     @PrimaryKey val id: UUID = UUID.randomUUID(),
-    val stepId: UUID,
+    val workoutExerciseId: UUID,
     val orderIndex: Int,
 
     val targetReps: Int? = null,
@@ -34,8 +34,7 @@ data class StepSetEntity(
     val targetWeightUnit: WeightUnit? = null,
 
     val restAfterSetSeconds: Int? = null,
-    val rpeTarget: Double? = null,
-    val rirTarget: Int? = null,
+    val effortLevel: Double? = null,
 
     val setType: SetType = SetType.WORK
 )

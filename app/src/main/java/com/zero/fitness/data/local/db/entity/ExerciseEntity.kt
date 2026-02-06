@@ -13,6 +13,9 @@ data class ExerciseEntity(
     val allowWeight: Boolean = true,
     val equipment: String? = null,
     val muscleGroupsCsv: String? = null, // "chest,triceps"
+    val difficulty: String? = null, // DifficultyLevel enum as string
+    val isCompound: Boolean = true,
+    val videoUrl: String? = null,
     val createdAtEpochMs: Long = System.currentTimeMillis(),
     val updatedAtEpochMs: Long = System.currentTimeMillis()
 )

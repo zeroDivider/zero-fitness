@@ -18,7 +18,10 @@ fun ExerciseEntity.toDomain(): Exercise =
         description = description,
         allowWeight = allowWeight,
         equipment = equipment,
-        muscleGroups = muscleGroupsCsv.toStringList()
+        muscleGroups = muscleGroupsCsv.toStringList(),
+        difficulty = difficulty?.let { DifficultyLevel.valueOf(it) },
+        isCompound = isCompound,
+        videoUrl = videoUrl
     )
 
 fun Exercise.toEntity(nowEpochMs: Long = System.currentTimeMillis()): ExerciseEntity =
@@ -29,43 +32,45 @@ fun Exercise.toEntity(nowEpochMs: Long = System.currentTimeMillis()): ExerciseEn
         allowWeight = allowWeight,
         equipment = equipment,
         muscleGroupsCsv = muscleGroups.toCsv(),
+        difficulty = difficulty?.name,
+        isCompound = isCompound,
+        videoUrl = videoUrl,
         updatedAtEpochMs = nowEpochMs
     )
 
-fun StepSetEntity.toDomain(): StepSet {
+fun PlannedSetEntity.toDomain(): PlannedSet {
     val target: com.zero.fitness.domain.model.WorkoutTarget = when {
         targetReps != null -> com.zero.fitness.domain.model.WorkoutTarget.Reps(targetReps)
         targetTimeSeconds != null -> com.zero.fitness.domain.model.WorkoutTarget.Time(targetTimeSeconds)
         targetDistanceMeters != null -> com.zero.fitness.domain.model.WorkoutTarget.Distance(targetDistanceMeters)
-        else -> error("Invalid StepSetEntity($id): missing target")
+        else -> error("Invalid PlannedSetEntity($id): missing target")
     }
 
     val weight = if (targetWeightValue != null && targetWeightUnit != null) {
         Weight(targetWeightValue, targetWeightUnit)
     } else null
 
-    return StepSet(
+    return PlannedSet(
         id = id,
         orderIndex = orderIndex,
         target = target,
         targetWeight = weight,
         restAfterSetSeconds = restAfterSetSeconds,
-        rpeTarget = rpeTarget,
-        rirTarget = rirTarget,
+        effortLevel = effortLevel,
         setType = setType
     )
 }
 
-fun StepSet.toEntity(stepId: UUID): StepSetEntity {
+fun PlannedSet.toEntity(workoutExerciseId: UUID): PlannedSetEntity {
     val (reps, time, dist) = when (val t = target) {
         is WorkoutTarget.Reps -> Triple(t.reps, null, null)
         is WorkoutTarget.Time -> Triple(null, t.seconds, null)
         is WorkoutTarget.Distance -> Triple(null, null, t.meters)
     }
 
-    return StepSetEntity(
+    return PlannedSetEntity(
         id = id,
-        stepId = stepId,
+        workoutExerciseId = workoutExerciseId,
         orderIndex = orderIndex,
         targetReps = reps,
         targetTimeSeconds = time,
@@ -73,8 +78,7 @@ fun StepSet.toEntity(stepId: UUID): StepSetEntity {
         targetWeightValue = targetWeight?.value,
         targetWeightUnit = targetWeight?.unit,
         restAfterSetSeconds = restAfterSetSeconds,
-        rpeTarget = rpeTarget,
-        rirTarget = rirTarget,
+        effortLevel = effortLevel,
         setType = setType
     )
 }
@@ -95,7 +99,8 @@ fun SessionSetResultEntity.toDomain(): SessionSetResult {
         id = id,
         sessionId = sessionId,
         blockId = blockId,
-        stepId = stepId,
+        exerciseId = workoutExerciseId,
+        plannedSetId = plannedSetId,
         roundIndex = roundIndex,
         setOrderIndex = setOrderIndex,
         actualTarget = actualTarget,
@@ -120,7 +125,8 @@ fun SessionSetResult.toEntity(): SessionSetResultEntity {
         id = id,
         sessionId = sessionId,
         blockId = blockId,
-        stepId = stepId,
+        workoutExerciseId = exerciseId,
+        plannedSetId = plannedSetId,
         roundIndex = roundIndex,
         setOrderIndex = setOrderIndex,
         actualReps = reps,
