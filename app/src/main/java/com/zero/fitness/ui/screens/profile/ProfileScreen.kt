@@ -20,6 +20,7 @@ fun ProfileScreen(
         topBar = {
             AppBar(
                 title = "Profile screen",
+                subtitle = "This is your happy place!",
                 onBackClick = { onNavigateUp() },
             )
         }

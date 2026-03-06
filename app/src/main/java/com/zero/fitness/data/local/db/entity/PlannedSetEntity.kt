@@ -34,7 +34,8 @@ data class PlannedSetEntity(
     val targetWeightUnit: WeightUnit? = null,
 
     val restAfterSetSeconds: Int? = null,
-    val effortLevel: Double? = null,
+    val rpeTarget: Double? = null,
+    val rirTarget: Int? = null,
 
     val setType: SetType = SetType.WORK
 )

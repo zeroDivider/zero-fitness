@@ -46,7 +46,8 @@ data class PlannedSet(
     val target: WorkoutTarget,
     val targetWeight: Weight? = null,
     val restAfterSetSeconds: Int? = null,
-    val effortLevel: Double? = null,
+    val rpeTarget: Double? = null,
+    val rirTarget: Int? = null,
     val setType: SetType = SetType.WORK
 )
 

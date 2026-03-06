@@ -21,6 +21,7 @@ fun NewExerciseScreen(
         topBar = {
             AppBar(
                 title = "New exercise",
+                subtitle = "Go GO GOOO!",
                 onBackClick = onNavigateUp,
             )
         }

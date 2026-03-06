@@ -21,6 +21,7 @@ fun PreviewWorkoutScreen(
         topBar = {
             AppBar(
                 title = "Workout preview",
+                subtitle = "You know what you did?",
                 onBackClick = onNavigateUp,
             )
         }

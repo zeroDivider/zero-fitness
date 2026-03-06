@@ -56,7 +56,8 @@ fun PlannedSetEntity.toDomain(): PlannedSet {
         target = target,
         targetWeight = weight,
         restAfterSetSeconds = restAfterSetSeconds,
-        effortLevel = effortLevel,
+        rpeTarget = rpeTarget,
+        rirTarget = rirTarget,
         setType = setType
     )
 }
@@ -78,7 +79,8 @@ fun PlannedSet.toEntity(workoutExerciseId: UUID): PlannedSetEntity {
         targetWeightValue = targetWeight?.value,
         targetWeightUnit = targetWeight?.unit,
         restAfterSetSeconds = restAfterSetSeconds,
-        effortLevel = effortLevel,
+        rpeTarget = rpeTarget,
+        rirTarget = rirTarget,
         setType = setType
     )
 }

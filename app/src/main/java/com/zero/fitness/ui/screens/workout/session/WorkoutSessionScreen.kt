@@ -21,6 +21,7 @@ fun WorkoutSessionScreen(
         topBar = {
             AppBar(
                 title = "Workout session",
+                subtitle = "Grrr!",
                 onBackClick = onNavigateUp,
             )
         }
