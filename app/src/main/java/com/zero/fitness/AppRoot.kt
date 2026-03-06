@@ -1,5 +1,9 @@
 package com.zero.fitness
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -22,6 +26,24 @@ fun AppRoot() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween()
+            )
+        },
+        exitTransition = {
+            scaleOut(targetScale = .9f, animationSpec = tween())
+        },
+        popEnterTransition = {
+            scaleIn(initialScale = .9f, animationSpec = tween())
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween()
+            )
+        },
         startDestination = LoginDestination
     ) {
         loginScreen(

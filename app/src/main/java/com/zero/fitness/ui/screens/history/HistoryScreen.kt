@@ -20,6 +20,7 @@ fun HistoryScreen(
         topBar = {
             AppBar(
                 title = "History screen",
+                subtitle = "Hurry up!",
                 onBackClick = { onNavigateUp() },
             )
         }
