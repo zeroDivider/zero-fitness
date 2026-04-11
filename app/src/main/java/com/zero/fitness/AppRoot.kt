@@ -7,8 +7,8 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.zero.fitness.ui.screens.login.LoginDestination
 import com.zero.fitness.ui.screens.login.loginScreen
+import com.zero.fitness.ui.screens.main.MainDestination
 import com.zero.fitness.ui.screens.main.mainScreen
 import com.zero.fitness.ui.screens.main.navigateToMain
 import com.zero.fitness.ui.screens.workout.exercise.navigateToNewExercise
@@ -44,7 +44,7 @@ fun AppRoot() {
                 animationSpec = tween()
             )
         },
-        startDestination = LoginDestination
+        startDestination = MainDestination,
     ) {
         loginScreen(
             onNavigateToMain = { navController.navigateToMain() },
