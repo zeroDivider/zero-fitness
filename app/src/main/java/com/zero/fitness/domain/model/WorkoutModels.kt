@@ -8,8 +8,8 @@ data class Exercise(
     val name: String,
     val description: String? = null,
     val allowWeight: Boolean = true,
-    val equipment: String? = null,
-    val muscleGroups: List<String> = emptyList(),
+    val equipment: Equipment? = null,
+    val muscleGroups: List<MuscleGroup> = emptyList(),
     val difficulty: DifficultyLevel? = null,
     val isCompound: Boolean = true,
     val videoUrl: String? = null
@@ -70,8 +70,7 @@ data class SessionSetResult(
     val actualTarget: WorkoutTarget? = null,
     val actualWeight: Weight? = null,
     val actualRestSeconds: Int? = null,
-    val rpeActual: Double? = null,
-    val rirActual: Int? = null,
+    val effortLevel: Double? = null,
     val completed: Boolean = true,
     val timestampEpochMs: Long
 )

@@ -9,12 +9,14 @@ import kotlinx.serialization.Serializable
 data object MainDestination
 
 fun NavGraphBuilder.mainScreen(
+    onNavigateToCreateExercise: () -> Unit,
     onNavigateToCreateWorkout: () -> Unit,
     onNavigateToWorkoutPreview: () -> Unit,
     onNavigateToWorkout: () -> Unit,
 ) {
     composable<MainDestination> {
         MainScreen(
+            onNavigateToCreateExercise = onNavigateToCreateExercise,
             onNavigateToCreateWorkout = onNavigateToCreateWorkout,
             onNavigateToWorkoutPreview = onNavigateToWorkoutPreview,
             onNavigateToWorkout = onNavigateToWorkout,

@@ -57,8 +57,7 @@ data class SessionSetResultEntity(
     val actualWeightUnit: WeightUnit? = null,
 
     val actualRestSeconds: Int? = null,
-    val rpeActual: Double? = null,
-    val rirActual: Int? = null,
+    val effortLevel: Double? = null,
 
     val completed: Boolean = true,
     val timestampEpochMs: Long = System.currentTimeMillis()
