@@ -50,6 +50,7 @@ fun AppRoot() {
             onNavigateToMain = { navController.navigateToMain() },
         )
         mainScreen(
+            onNavigateToCreateExercise = { navController.navigateToNewExercise() },
             onNavigateToCreateWorkout = { navController.navigateToNewWorkout() },
             onNavigateToWorkoutPreview = { navController.navigateToPreviewWorkout() },
             onNavigateToWorkout = { navController.navigateToWorkoutSession() },

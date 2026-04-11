@@ -3,6 +3,17 @@ package com.zero.fitness.data.mapper
 import com.zero.fitness.data.local.db.entity.*
 import com.zero.fitness.data.remote.dto.ExerciseDto
 import com.zero.fitness.domain.model.*
+import com.zero.fitness.data.local.db.entity.ExerciseEntity
+import com.zero.fitness.data.local.db.entity.PlannedSetEntity
+import com.zero.fitness.data.local.db.entity.SessionSetResultEntity
+import com.zero.fitness.domain.model.DifficultyLevel
+import com.zero.fitness.domain.model.Equipment
+import com.zero.fitness.domain.model.Exercise
+import com.zero.fitness.domain.model.MuscleGroup
+import com.zero.fitness.domain.model.PlannedSet
+import com.zero.fitness.domain.model.SessionSetResult
+import com.zero.fitness.domain.model.Weight
+import com.zero.fitness.domain.model.WorkoutTarget
 import java.util.UUID
 
 
@@ -18,8 +29,8 @@ fun ExerciseEntity.toDomain(): Exercise =
         name = name,
         description = description,
         allowWeight = allowWeight,
-        equipment = equipment,
-        muscleGroups = muscleGroupsCsv.toStringList(),
+        equipment = equipment?.let { Equipment.valueOf(it) },
+        muscleGroups = muscleGroupsCsv.toStringList().map { MuscleGroup.valueOf(it) },
         difficulty = difficulty?.let { DifficultyLevel.valueOf(it) },
         isCompound = isCompound,
         videoUrl = videoUrl
@@ -31,8 +42,8 @@ fun Exercise.toEntity(nowEpochMs: Long = System.currentTimeMillis()): ExerciseEn
         name = name,
         description = description,
         allowWeight = allowWeight,
-        equipment = equipment,
-        muscleGroupsCsv = muscleGroups.toCsv(),
+        equipment = equipment.toString(),
+        muscleGroupsCsv = muscleGroups.map { it.name }.toCsv(),
         difficulty = difficulty?.name,
         isCompound = isCompound,
         videoUrl = videoUrl,
@@ -144,8 +155,7 @@ fun SessionSetResultEntity.toDomain(): SessionSetResult {
         actualTarget = actualTarget,
         actualWeight = actualWeight,
         actualRestSeconds = actualRestSeconds,
-        rpeActual = rpeActual,
-        rirActual = rirActual,
+        effortLevel = effortLevel,
         completed = completed,
         timestampEpochMs = timestampEpochMs
     )
@@ -173,8 +183,7 @@ fun SessionSetResult.toEntity(): SessionSetResultEntity {
         actualWeightValue = actualWeight?.value,
         actualWeightUnit = actualWeight?.unit,
         actualRestSeconds = actualRestSeconds,
-        rpeActual = rpeActual,
-        rirActual = rirActual,
+        effortLevel = effortLevel,
         completed = completed,
         timestampEpochMs = timestampEpochMs
     )
