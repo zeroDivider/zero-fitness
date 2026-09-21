@@ -108,7 +108,10 @@ fun NewExerciseScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     ExerciseType.entries.forEach {
-                        InteractiveBubble(label = it.name) {
+                        InteractiveBubble(
+                            label = it.name,
+                            //isSelected = it == state.selectedType
+                        ) {
 
                         }
                     }
