@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,6 +8,29 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.serialization)
 }
+
+val localProperties =
+    Properties().apply {
+        val file = rootProject.file("local.properties")
+        if (file.exists()) {
+            file.inputStream().use { load(it) }
+        }
+    }
+
+fun requireSupabaseProperty(name: String): String {
+    val fromLocal = localProperties.getProperty(name)?.trim()?.takeIf { it.isNotEmpty() }
+    val fromProject = project.findProperty(name)?.toString()?.trim()?.takeIf { it.isNotEmpty() }
+    return fromLocal
+        ?: fromProject
+        ?: error(
+            "Missing Supabase config '$name'. Add it to local.properties or pass -P$name=...",
+        )
+}
+
+fun String.escapeForBuildConfig(): String = replace("\\", "\\\\").replace("\"", "\\\"")
+
+val supabaseUrl = requireSupabaseProperty("supabase.url").escapeForBuildConfig()
+val supabaseKey = requireSupabaseProperty("supabase.key").escapeForBuildConfig()
 
 android {
     namespace = "com.zero.fitness"
@@ -19,6 +44,9 @@ android {
         versionName = "0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
+        buildConfigField("String", "SUPABASE_KEY", "\"$supabaseKey\"")
     }
 
     buildTypes {
@@ -36,6 +64,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     kapt {
         correctErrorTypes = true
@@ -51,6 +80,10 @@ dependencies {
     // hilt
     implementation(libs.androidx.hilt.viewmodel)
     kapt(libs.androidx.hilt.compiler)
+
+    implementation(platform(libs.supabase.bom))
+    implementation(libs.supabase.postgrest)
+    implementation(libs.ktor.client.android)
 
     // room
     implementation(libs.bundles.room)

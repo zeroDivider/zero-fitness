@@ -32,3 +32,9 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Cursor / AI local files
+/.cursor/skills/
+/.cursor/plans/
+/plans/
+*.plan.md
