@@ -17,5 +17,7 @@ data class ExerciseEntity(
     val isCompound: Boolean = true,
     val videoUrl: String? = null,
     val createdAtEpochMs: Long = System.currentTimeMillis(),
-    val updatedAtEpochMs: Long = System.currentTimeMillis()
+    val updatedAtEpochMs: Long = System.currentTimeMillis(),
+    val syncPending: Boolean = true,
+    val deletedLocally: Boolean = false,
 )

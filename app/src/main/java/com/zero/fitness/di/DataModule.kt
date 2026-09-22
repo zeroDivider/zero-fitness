@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.zero.fitness.data.local.db.AppDatabase
 import com.zero.fitness.data.local.db.DbMigrations
+import com.zero.fitness.data.local.db.dao.ExerciseDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,4 +26,7 @@ class DataModule {
             .build()
     }
 
+    @Singleton
+    @Provides
+    fun provideExerciseDao(db: AppDatabase): ExerciseDao = db.exerciseDao()
 }

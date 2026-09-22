@@ -1,6 +1,7 @@
 package com.zero.fitness.data.mapper
 
 import com.zero.fitness.data.local.db.entity.*
+import com.zero.fitness.data.remote.dto.ExerciseDto
 import com.zero.fitness.domain.model.*
 import java.util.UUID
 
@@ -35,7 +36,42 @@ fun Exercise.toEntity(nowEpochMs: Long = System.currentTimeMillis()): ExerciseEn
         difficulty = difficulty?.name,
         isCompound = isCompound,
         videoUrl = videoUrl,
-        updatedAtEpochMs = nowEpochMs
+        updatedAtEpochMs = nowEpochMs,
+    )
+
+fun ExerciseEntity.toDto(): ExerciseDto =
+    ExerciseDto(
+        id = id.toString(),
+        name = name,
+        description = description,
+        allowWeight = allowWeight,
+        equipment = equipment,
+        muscleGroupsCsv = muscleGroupsCsv,
+        difficulty = difficulty,
+        isCompound = isCompound,
+        videoUrl = videoUrl,
+        createdAtEpochMs = createdAtEpochMs,
+        updatedAtEpochMs = updatedAtEpochMs,
+    )
+
+fun ExerciseDto.toEntity(
+    syncPending: Boolean = false,
+    deletedLocally: Boolean = false,
+): ExerciseEntity =
+    ExerciseEntity(
+        id = UUID.fromString(id),
+        name = name,
+        description = description,
+        allowWeight = allowWeight,
+        equipment = equipment,
+        muscleGroupsCsv = muscleGroupsCsv,
+        difficulty = difficulty,
+        isCompound = isCompound,
+        videoUrl = videoUrl,
+        createdAtEpochMs = createdAtEpochMs,
+        updatedAtEpochMs = updatedAtEpochMs,
+        syncPending = syncPending,
+        deletedLocally = deletedLocally,
     )
 
 fun PlannedSetEntity.toDomain(): PlannedSet {
