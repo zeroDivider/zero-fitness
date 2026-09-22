@@ -1,0 +1,35 @@
+name: Android Build
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Configure Supabase credentials
+        run: |
+          printf 'supabase.url=%s\n' "$SUPABASE_URL" >> local.properties
+          printf 'supabase.key=%s\n' "$SUPABASE_KEY" >> local.properties
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+
+      - name: Assemble debug APK
+        run: ./gradlew assembleDebug --no-daemon
