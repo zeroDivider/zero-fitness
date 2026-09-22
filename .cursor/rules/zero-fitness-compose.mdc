@@ -1,0 +1,18 @@
+---
+description: Zero Fitness conventions for Compose screens and shared UI
+globs: app/src/main/java/com/zero/fitness/ui/**/*.kt
+alwaysApply: false
+---
+
+# Zero Fitness Compose Conventions
+
+- Use mockups in `docs/design/mockups/` as visual references. Match the requested screen by its HTML comments, labels, and visible copy; treat generated HTML/CSS as design intent rather than implementation.
+- Reuse `MaterialTheme` roles and the palette in `ui/theme` before adding colors. Wrap previews in `ZeroFitnessTheme`.
+- Prefer shared UI from `ui/screens/common`, especially `AppBar`, `AppButton`, `Bubble`, and `InteractiveBubble`, when their semantics fit.
+- Keep reusable Composables driven by state and callbacks. Connect them to the feature's existing state holder at the screen boundary.
+- Keep feature UI and navigation together under `ui/screens/<feature>`. Follow existing typed Navigation Compose destinations using `@Serializable`, `NavGraphBuilder` registration functions, and `NavController` navigation extensions.
+- Use Material 3 and existing project dependencies. Do not add a dependency solely to reproduce a mockup detail without confirming the need.
+- Use lazy containers for repeating or potentially long content and `FlowRow` for wrapping selectable options.
+- Provide meaningful content descriptions and selection semantics, preserve Android touch targets, and ensure forms can scroll on compact screens.
+- Add realistic previews for reusable content and important screen states.
+- Verify edited UI with IDE diagnostics and the narrowest relevant task from the repository Gradle wrapper.
