@@ -4,9 +4,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.hilt.android)
 }
 
 val localProperties =
@@ -66,20 +66,17 @@ android {
         compose = true
         buildConfig = true
     }
-    kapt {
-        correctErrorTypes = true
-    }
 }
 
 dependencies {
     implementation(libs.bundles.core)
     implementation(libs.bundles.ui)
     implementation(platform(libs.androidx.compose.bom))
-    ksp(libs.ksp)
 
     // hilt
-    implementation(libs.androidx.hilt.viewmodel)
-    kapt(libs.androidx.hilt.compiler)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.androidx.hilt.compiler)
 
     implementation(platform(libs.supabase.bom))
     implementation(libs.supabase.postgrest)
