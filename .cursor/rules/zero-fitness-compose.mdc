@@ -6,13 +6,44 @@ alwaysApply: false
 
 # Zero Fitness Compose Conventions
 
-- Use mockups in `docs/design/mockups/` as visual references. Match the requested screen by its HTML comments, labels, and visible copy; treat generated HTML/CSS as design intent rather than implementation.
-- Reuse `MaterialTheme` roles and the palette in `ui/theme` before adding colors. Wrap previews in `ZeroFitnessTheme`.
-- Prefer shared UI from `ui/screens/common`, especially `AppBar`, `AppButton`, `Bubble`, and `InteractiveBubble`, when their semantics fit.
-- Keep reusable Composables driven by state and callbacks. Connect them to the feature's existing state holder at the screen boundary.
-- Keep feature UI and navigation together under `ui/screens/<feature>`. Follow existing typed Navigation Compose destinations using `@Serializable`, `NavGraphBuilder` registration functions, and `NavController` navigation extensions.
-- Use Material 3 and existing project dependencies. Do not add a dependency solely to reproduce a mockup detail without confirming the need.
-- Use lazy containers for repeating or potentially long content and `FlowRow` for wrapping selectable options.
-- Provide meaningful content descriptions and selection semantics, preserve Android touch targets, and ensure forms can scroll on compact screens.
-- Add realistic previews for reusable content and important screen states.
-- Verify edited UI with IDE diagnostics and the narrowest relevant task from the repository Gradle wrapper.
+For mockup-driven UI work, follow the repo skills `design-to-compose-01-build`, `design-to-compose-02-review`, and `design-to-compose-03-verify`. This rule adds **project-specific** paths and patterns; the skills stay generic.
+
+## Design references
+
+- Mockups: `docs/design/mockups/`. Match the requested screen by HTML comments, labels, and visible copy; treat HTML/CSS as design intent, not implementation.
+
+## Theme and shared UI
+
+- Palette and scheme: `app/src/main/java/com/zero/fitness/ui/theme/` (`Color.kt`, `Theme.kt`). Extend these before adding new colors in components.
+- Reuse `MaterialTheme` roles and existing tokens. Wrap previews in `ZeroFitnessTheme`; prefer `dynamicColor = false` in previews for stable comparison with mockups.
+- Shared components: `app/src/main/java/com/zero/fitness/ui/screens/common/` — prefer `AppBar`, `AppButton`, `Bubble`, `InteractiveBubble`, `AppToggle`, and related APIs when semantics fit.
+
+## Defaults pattern (required for new shared components)
+
+Mirror `AppButtonDefaults`, `BubblesDefaults`, `AppBarDefaults`, and `AppToggleDefaults`:
+
+- `<Component>Defaults` with `@Immutable` token data classes and `@Composable` factories defaulting to `ui/theme` (not inline hex in composable bodies).
+- Public composables accept optional `colors` / `sizes` (or equivalent) defaulting to those factories.
+
+## Strings
+
+- User-facing and accessibility copy: `app/src/main/res/values/strings.xml`. Mirror new keys in every existing `app/src/main/res/values-*/strings.xml` locale folder (currently default `values/` only unless more exist).
+- Load with `stringResource(R.string.*)` — not hardcoded production strings.
+- Generic shared composables take `String` parameters where needed; feature-specific layouts and copy belong under the feature package (for example `TrackWeightToggleSettingCard` in `ui/screens/workout/exercise/`).
+- Previews use the same `stringResource` keys as production. Do not use preview-only literals or stale-`R` workarounds; rebuild the app module if generated `R` is out of date.
+
+## Screens and architecture
+
+- Feature UI under `ui/screens/<feature>/`. Reusable UI stays stateless with callbacks; connect to the feature ViewModel (or existing state holder) at the screen boundary.
+- Navigation: typed Navigation Compose (`@Serializable`, `NavGraphBuilder` extensions, `NavController` helpers) as elsewhere in the project.
+
+## Layout and accessibility
+
+- Material 3 and existing dependencies only; no new libraries solely to mimic mockup details.
+- `FlowRow` for wrapping chips/options; lazy containers for long or repeating lists.
+- Meaningful semantics, adequate touch targets, scrollable forms on small screens.
+
+## Verification
+
+- IDE diagnostics on edited Kotlin files.
+- Gradle: `./gradlew :app:compileDebugKotlin` (or full rebuild if resources changed).
