@@ -19,6 +19,9 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = Coral,
     onTertiary = White,
     surface = White,
+    onSurface = TextPrimary,
+    onSurfaceVariant = Gray,
+    outline = BorderLight,
     secondaryContainer = Yellow,
     onSecondaryContainer = DarkPurple,
 )
@@ -33,6 +36,9 @@ private val LightColorScheme = lightColorScheme(
     tertiary = Coral,
     onTertiary = White,
     surface = White,
+    onSurface = TextPrimary,
+    onSurfaceVariant = Gray,
+    outline = BorderLight,
     secondaryContainer = Yellow,
     onSecondaryContainer = DarkPurple,
 )
