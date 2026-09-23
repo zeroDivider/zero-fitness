@@ -24,10 +24,17 @@ class NewExerciseViewModel @Inject constructor() : ViewModel() {
         _viewState.update { it.copy(description = newDescription) }
     }
 
+    fun updateEquipment(equipment: Equipment) {
+        _viewState.update { it.copy(equipment = equipment) }
+    }
+
     fun updateExerciseType(type: ExerciseType) {
         _viewState.update { it.copy(selectedType = type) }
     }
 
+    fun updateTrackWeight(trackWeight: Boolean) {
+        _viewState.update { it.copy(trackWeight = trackWeight) }
+    }
 
 }
 
