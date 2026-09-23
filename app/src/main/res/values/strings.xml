@@ -1,9 +1,35 @@
 <resources>
     <string name="app_name">zero-fitness</string>
 
+    <!-- Common: toggle -->
+    <string name="toggle_state_on">On</string>
+    <string name="toggle_state_off">Off</string>
+
+    <!-- Common: exercise setting cards -->
     <string name="exercise_track_weight_title">Track Weight</string>
     <string name="exercise_track_weight_subtitle">Allow weight to be logged</string>
 
-    <string name="toggle_state_on">On</string>
-    <string name="toggle_state_off">Off</string>
+    <!-- Common: equipment -->
+    <string name="equipment_bodyweight">Bodyweight</string>
+    <string name="equipment_barbell">Barbell</string>
+    <string name="equipment_dumbbell">Dumbbell</string>
+    <string name="equipment_kettlebell">Kettlebell</string>
+    <string name="equipment_cable">Cable</string>
+    <string name="equipment_machine">Machine</string>
+    <string name="equipment_resistance_band">Resistance band</string>
+
+    <!-- Common: exercise type -->
+    <string name="exercise_type_compound">Compound</string>
+    <string name="exercise_type_isolation">Isolation</string>
+
+    <!-- Screen: New exercise -->
+    <string name="new_exercise_app_bar_title">New exercise</string>
+    <string name="new_exercise_app_bar_subtitle">Go GO GOOO!</string>
+    <string name="new_exercise_save">Save Exercise</string>
+    <string name="new_exercise_label_name">Name</string>
+    <string name="new_exercise_hint_name">Enter name</string>
+    <string name="new_exercise_label_description">Description</string>
+    <string name="new_exercise_hint_description">Enter some description</string>
+    <string name="new_exercise_label_equipment">Equipment</string>
+    <string name="new_exercise_label_exercise_type">Exercise Type</string>
 </resources>
