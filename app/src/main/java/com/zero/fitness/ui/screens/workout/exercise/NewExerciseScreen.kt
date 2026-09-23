@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -25,6 +27,8 @@ import com.zero.fitness.ui.screens.common.AppBar
 import com.zero.fitness.ui.screens.common.AppButton
 import com.zero.fitness.ui.screens.common.AppButtonDefaults
 import com.zero.fitness.ui.screens.common.InteractiveBubble
+import com.zero.fitness.ui.screens.common.ScrollEdgeFadeContainer
+import com.zero.fitness.ui.screens.common.ScrollEdgeFadeDefaults
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,6 +38,9 @@ fun NewExerciseScreen(
 ) {
     val state by viewModel.viewState.collectAsStateWithLifecycle()
 
+    val scrollFadeSizes = ScrollEdgeFadeDefaults.sizes()
+    val scrollState = rememberScrollState()
+
     Scaffold(
         topBar = {
             AppBar(
@@ -41,89 +48,121 @@ fun NewExerciseScreen(
                 subtitle = "Go GO GOOO!",
                 onBackClick = onNavigateUp,
             )
-        }
+        },
+        bottomBar = {
+            AppButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 18.dp)
+                    .padding(top = 14.dp, bottom = 12.dp),
+                label = "Save Exercise",
+                colors = AppButtonDefaults.buttonColors(),
+                onClickAction = { },
+            )
+        },
     ) { padding ->
         Surface(
             modifier = Modifier.padding(padding),
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 18.dp, vertical = 12.dp),
+            ScrollEdgeFadeContainer(
+                scrollState = scrollState,
+                modifier = Modifier.fillMaxSize(),
+                sizes = scrollFadeSizes,
             ) {
-                Text(
-                    text = "Name",
-                    style = MaterialTheme.typography.titleSmall,
-                )
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = state.name,
-                    label = { Text("Enter name") },
-                    onValueChange = { viewModel.updateName(it) },
-                )
-                Text(
-                    text = "Description",
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.padding(top = 14.dp),
-                )
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = state.description,
-                    minLines = 4,
-                    label = { Text("Enter some description") },
-                    onValueChange = { viewModel.updateDescription(it) },
-                )
-                Text(
-                    text = "Equipment",
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.padding(top = 14.dp),
-                )
-                FlowRow(
-                    modifier = Modifier.padding(top = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Equipment.entries.forEach {
-                        InteractiveBubble(
-                            label = it.name,
-                            isSelected = it == state.equipment
-                        ) { viewModel.updateEquipment(it) }
-                    }
-                }
-                Text(
-                    text = "Exercise Type",
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.padding(top = 14.dp),
-                )
-                FlowRow(
-                    modifier = Modifier.padding(top = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    ExerciseType.entries.forEach {
-                        InteractiveBubble(
-                            label = it.name,
-                            isSelected = it == state.selectedType,
-                        ) { viewModel.updateExerciseType(it) }
-                    }
-                }
-                TrackWeightToggleSettingCard(
+                NewExerciseForm(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 18.dp),
-                    checked = state.trackWeight,
-                    onCheckedChange = { viewModel.updateTrackWeight(it) },
-                )
-                AppButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 14.dp),
-                    label = "Save Exercise",
-                    colors = AppButtonDefaults.buttonColors(),
-                    onClickAction = { }
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                        .padding(horizontal = 18.dp, vertical = 12.dp)
+                        .padding(bottom = scrollFadeSizes.fadeHeight),
+                    state = state,
+                    onNameChange = viewModel::updateName,
+                    onDescriptionChange = viewModel::updateDescription,
+                    onEquipmentChange = viewModel::updateEquipment,
+                    onExerciseTypeChange = viewModel::updateExerciseType,
+                    onTrackWeightChange = viewModel::updateTrackWeight,
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun NewExerciseForm(
+    state: NewExerciseScreenState,
+    onNameChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
+    onEquipmentChange: (Equipment) -> Unit,
+    onExerciseTypeChange: (ExerciseType) -> Unit,
+    onTrackWeightChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = "Name",
+            style = MaterialTheme.typography.titleSmall,
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = state.name,
+            label = { Text("Enter name") },
+            onValueChange = onNameChange,
+        )
+        Text(
+            text = "Description",
+            style = MaterialTheme.typography.titleSmall,
+            modifier = Modifier.padding(top = 14.dp),
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = state.description,
+            minLines = 4,
+            label = { Text("Enter some description") },
+            onValueChange = onDescriptionChange,
+        )
+        Text(
+            text = "Equipment",
+            style = MaterialTheme.typography.titleSmall,
+            modifier = Modifier.padding(top = 14.dp),
+        )
+        FlowRow(
+            modifier = Modifier.padding(top = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Equipment.entries.forEach {
+                InteractiveBubble(
+                    label = it.name,
+                    isSelected = it == state.equipment,
+                    onClickAction = { onEquipmentChange(it) },
+                )
+            }
+        }
+        Text(
+            text = "Exercise Type",
+            style = MaterialTheme.typography.titleSmall,
+            modifier = Modifier.padding(top = 14.dp),
+        )
+        FlowRow(
+            modifier = Modifier.padding(top = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            ExerciseType.entries.forEach {
+                InteractiveBubble(
+                    label = it.name,
+                    isSelected = it == state.selectedType,
+                    onClickAction = { onExerciseTypeChange(it) },
+                )
+            }
+        }
+        TrackWeightToggleSettingCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 18.dp),
+            checked = state.trackWeight,
+            onCheckedChange = onTrackWeightChange,
+        )
     }
 }
 
