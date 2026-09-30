@@ -1,10 +1,15 @@
+-- Desired current schema. New projects: run this file.
+-- Existing projects: apply docs/supabase/migrations/ (do not re-run
+-- CREATE TABLE IF NOT EXISTS to pick up new columns).
+--
 -- Exercises table (maps to ExerciseEntity).
--- Applied in Supabase.
 
 create table if not exists public.exercises (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   description text,
+  name_sr text,
+  description_sr text,
   allow_weight boolean not null default true,
   equipment text,
   muscle_groups_csv text, -- e.g. "chest,triceps"

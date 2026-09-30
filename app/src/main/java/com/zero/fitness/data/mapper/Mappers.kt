@@ -1,8 +1,6 @@
 package com.zero.fitness.data.mapper
 
-import com.zero.fitness.data.local.db.entity.*
 import com.zero.fitness.data.remote.dto.ExerciseDto
-import com.zero.fitness.domain.model.*
 import com.zero.fitness.data.local.db.entity.ExerciseEntity
 import com.zero.fitness.data.local.db.entity.PlannedSetEntity
 import com.zero.fitness.data.local.db.entity.SessionSetResultEntity
@@ -28,6 +26,8 @@ fun ExerciseEntity.toDomain(): Exercise =
         id = id,
         name = name,
         description = description,
+        nameSr = nameSr,
+        descriptionSr = descriptionSr,
         allowWeight = allowWeight,
         equipment = equipment?.let { Equipment.valueOf(it) },
         muscleGroups = muscleGroupsCsv.toStringList().map { MuscleGroup.valueOf(it) },
@@ -41,6 +41,8 @@ fun Exercise.toEntity(nowEpochMs: Long = System.currentTimeMillis()): ExerciseEn
         id = id,
         name = name,
         description = description,
+        nameSr = nameSr,
+        descriptionSr = descriptionSr,
         allowWeight = allowWeight,
         equipment = equipment.toString(),
         muscleGroupsCsv = muscleGroups.map { it.name }.toCsv(),
@@ -55,6 +57,8 @@ fun ExerciseEntity.toDto(): ExerciseDto =
         id = id.toString(),
         name = name,
         description = description,
+        nameSr = nameSr,
+        descriptionSr = descriptionSr,
         allowWeight = allowWeight,
         equipment = equipment,
         muscleGroupsCsv = muscleGroupsCsv,
@@ -73,6 +77,8 @@ fun ExerciseDto.toEntity(
         id = UUID.fromString(id),
         name = name,
         description = description,
+        nameSr = nameSr,
+        descriptionSr = descriptionSr,
         allowWeight = allowWeight,
         equipment = equipment,
         muscleGroupsCsv = muscleGroupsCsv,
