@@ -10,6 +10,8 @@ data class ExerciseEntity(
     @PrimaryKey val id: UUID = UUID.randomUUID(),
     val name: String,
     val description: String? = null,
+    val nameSr: String? = null,
+    val descriptionSr: String? = null,
     val allowWeight: Boolean = true,
     val equipment: String? = null,
     val muscleGroupsCsv: String? = null, // "chest,triceps"

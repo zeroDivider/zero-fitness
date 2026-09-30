@@ -30,6 +30,12 @@ object DbMigrations {
                     )
                 }
             },
+            object : Migration(2, 3) {
+                override fun migrate(db: SupportSQLiteDatabase) {
+                    db.execSQL("ALTER TABLE exercises ADD COLUMN nameSr TEXT")
+                    db.execSQL("ALTER TABLE exercises ADD COLUMN descriptionSr TEXT")
+                }
+            },
         )
     }
 }

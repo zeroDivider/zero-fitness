@@ -22,4 +22,4 @@ Use the Supabase publishable (anon) key, not the service role key.
 
 ### Schema
 
-SQL applied in Supabase lives in `docs/supabase/`. The `exercises` table (maps to `ExerciseEntity`) is in `docs/supabase/exercises.sql`.
+SQL applied in Supabase lives in `docs/supabase/`. The `exercises` table (maps to `ExerciseEntity`) is in `docs/supabase/exercises.sql` (desired current schema for new projects). If the table already exists, apply one-shot changes from `docs/supabase/migrations/` in the SQL editor instead of re-running the create file.

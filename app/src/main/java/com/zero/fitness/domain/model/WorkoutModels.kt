@@ -7,6 +7,8 @@ data class Exercise(
     val id: UUID,
     val name: String,
     val description: String? = null,
+    val nameSr: String? = null,
+    val descriptionSr: String? = null,
     val allowWeight: Boolean = true,
     val equipment: Equipment? = null,
     val muscleGroups: List<MuscleGroup> = emptyList(),

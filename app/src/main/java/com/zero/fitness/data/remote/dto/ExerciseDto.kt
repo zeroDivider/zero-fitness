@@ -8,6 +8,10 @@ data class ExerciseDto(
     val id: String,
     val name: String,
     val description: String? = null,
+    @SerialName("name_sr")
+    val nameSr: String? = null,
+    @SerialName("description_sr")
+    val descriptionSr: String? = null,
     @SerialName("allow_weight")
     val allowWeight: Boolean = true,
     val equipment: String? = null,
