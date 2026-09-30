@@ -30,6 +30,10 @@
     <string name="new_exercise_hint_name">Enter name</string>
     <string name="new_exercise_label_description">Description</string>
     <string name="new_exercise_hint_description">Enter some description</string>
+    <string name="new_exercise_label_name_sr">Name (Serbian)</string>
+    <string name="new_exercise_hint_name_sr">Enter Serbian name</string>
+    <string name="new_exercise_label_description_sr">Description (Serbian)</string>
+    <string name="new_exercise_hint_description_sr">Enter Serbian description</string>
     <string name="new_exercise_label_equipment">Equipment</string>
     <string name="new_exercise_label_exercise_type">Exercise Type</string>
 </resources>

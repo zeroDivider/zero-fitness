@@ -24,6 +24,14 @@ class NewExerciseViewModel @Inject constructor() : ViewModel() {
         _viewState.update { it.copy(description = newDescription) }
     }
 
+    fun updateNameSr(newNameSr: String) {
+        _viewState.update { it.copy(nameSr = newNameSr) }
+    }
+
+    fun updateDescriptionSr(newDescriptionSr: String) {
+        _viewState.update { it.copy(descriptionSr = newDescriptionSr) }
+    }
+
     fun updateEquipment(equipment: Equipment) {
         _viewState.update { it.copy(equipment = equipment) }
     }
@@ -41,6 +49,8 @@ class NewExerciseViewModel @Inject constructor() : ViewModel() {
 data class NewExerciseScreenState(
     val name: String = "",
     val description: String = "",
+    val nameSr: String = "",
+    val descriptionSr: String = "",
     val equipment: Equipment? = null,
     val selectedType: ExerciseType? = null,
     val trackWeight: Boolean = false,
@@ -54,6 +64,8 @@ sealed class ViewState {
     data class State(
         val name: String = "",
         val description: String = "",
+        val nameSr: String = "",
+        val descriptionSr: String = "",
         val equipment: Equipment? = null,
         val type: ExerciseType? = null,
         val trackWeight: Boolean = false,
