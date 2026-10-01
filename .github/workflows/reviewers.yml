@@ -1,11 +1,14 @@
 name: 'Auto Assign'
 on:
   pull_request:
-    types:
-      - opened
+    types: [opened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   add-reviews:
     runs-on: ubuntu-latest
     steps:
-      - uses: kentaro-m/auto-assign-action@v1.2.4
+      - uses: kentaro-m/auto-assign-action@v2.0.2
