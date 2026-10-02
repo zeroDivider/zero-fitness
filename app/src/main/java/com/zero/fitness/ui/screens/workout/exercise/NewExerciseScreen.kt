@@ -1,5 +1,6 @@
 package com.zero.fitness.ui.screens.workout.exercise
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -15,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -41,6 +43,12 @@ fun NewExerciseScreen(
 ) {
     val state by viewModel.viewState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            if (event is NewExerciseEvent.Saved) onNavigateUp()
+        }
+    }
+
     val scrollFadeSizes = ScrollEdgeFadeDefaults.sizes()
     val scrollState = rememberScrollState()
 
@@ -53,15 +61,29 @@ fun NewExerciseScreen(
             )
         },
         bottomBar = {
-            AppButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 18.dp)
-                    .padding(top = 14.dp, bottom = 12.dp),
-                label = stringResource(R.string.new_exercise_save),
-                colors = AppButtonDefaults.buttonColors(),
-                onClickAction = { },
-            )
+            Column {
+                AnimatedVisibility(visible = state.error != null) {
+                    val error = state.error
+                    Text(
+                        text = if (error == null) "" else newExerciseErrorText(error),
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 18.dp),
+                    )
+                }
+                AppButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 18.dp)
+                        .padding(top = 14.dp, bottom = 12.dp),
+                    label = stringResource(R.string.new_exercise_save),
+                    colors = AppButtonDefaults.buttonColors(),
+                    isEnabled = !state.isSaving,
+                    onClickAction = viewModel::save,
+                )
+            }
         },
     ) { padding ->
         Surface(
@@ -194,6 +216,15 @@ private fun NewExerciseForm(
             onCheckedChange = onTrackWeightChange,
         )
     }
+}
+
+@Composable
+private fun newExerciseErrorText(error: NewExerciseError): String = when (error) {
+    NewExerciseError.NameRequired -> stringResource(R.string.new_exercise_error_name_required)
+    NewExerciseError.EquipmentRequired -> stringResource(R.string.new_exercise_error_equipment_required)
+    NewExerciseError.TypeRequired -> stringResource(R.string.new_exercise_error_type_required)
+    NewExerciseError.Storage -> stringResource(R.string.new_exercise_error_storage)
+    NewExerciseError.Unknown -> stringResource(R.string.new_exercise_error_unknown)
 }
 
 @Preview

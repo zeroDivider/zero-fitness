@@ -26,6 +26,11 @@
     <string name="new_exercise_app_bar_title">New exercise</string>
     <string name="new_exercise_app_bar_subtitle">Go GO GOOO!</string>
     <string name="new_exercise_save">Save Exercise</string>
+    <string name="new_exercise_error_name_required">Enter a name</string>
+    <string name="new_exercise_error_equipment_required">Choose equipment</string>
+    <string name="new_exercise_error_type_required">Choose an exercise type</string>
+    <string name="new_exercise_error_storage">Could not save the exercise</string>
+    <string name="new_exercise_error_unknown">Something went wrong</string>
     <string name="new_exercise_label_name">Name</string>
     <string name="new_exercise_hint_name">Enter name</string>
     <string name="new_exercise_label_description">Description</string>
