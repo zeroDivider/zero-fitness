@@ -1,17 +1,25 @@
 package com.zero.fitness.ui.screens.common
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.zero.fitness.ui.theme.Coral
@@ -84,6 +92,49 @@ private fun LePreview() {
                 background = Coral,
                 label = White,
             ),
+        )
+        AppIconButton(
+            icon = Icons.Default.Edit,
+            contentDescription = "Edit",
+            onClick = {},
+        )
+    }
+}
+
+object AppIconButtonDefaults {
+    @Immutable
+    data class Colors(
+        val container: Color,
+        val icon: Color,
+    )
+
+    @Composable
+    fun colors(
+        container: Color = White.copy(alpha = 0.3f),
+        icon: Color = White,
+    ): Colors = Colors(container, icon)
+}
+
+@Composable
+fun AppIconButton(
+    icon: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    isEnabled: Boolean = true,
+    colors: AppIconButtonDefaults.Colors = AppIconButtonDefaults.colors(),
+) {
+    IconButton(
+        modifier = modifier
+            .clip(CircleShape)
+            .background(color = colors.container),
+        enabled = isEnabled,
+        onClick = onClick,
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = contentDescription,
+            tint = colors.icon,
         )
     }
 }
