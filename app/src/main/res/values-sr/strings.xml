@@ -26,18 +26,18 @@
     <string name="new_exercise_app_bar_title">Nova vežba</string>
     <string name="new_exercise_app_bar_subtitle">Imenuj pokret i kako želiš da ga pratiš</string>
     <string name="new_exercise_save">Sačuvaj vežbu</string>
-    <string name="new_exercise_error_name_required">Unesi naziv</string>
+    <string name="new_exercise_error_name_required">Unesi naziv (Engleski)</string>
     <string name="new_exercise_error_equipment_required">Izaberi opremu</string>
     <string name="new_exercise_error_type_required">Izaberi tip vežbe</string>
     <string name="new_exercise_error_storage">Vežba nije sačuvana</string>
     <string name="new_exercise_error_unknown">Nešto je pošlo po zlu</string>
-    <string name="new_exercise_label_name">Naziv</string>
+    <string name="new_exercise_label_name">Naziv (Engleski)</string>
     <string name="new_exercise_hint_name">Unesi naziv</string>
-    <string name="new_exercise_label_description">Opis</string>
+    <string name="new_exercise_label_description">Opis (Engleski)</string>
     <string name="new_exercise_hint_description">Unesi kratak opis</string>
-    <string name="new_exercise_label_name_sr">Naziv (srpski)</string>
+    <string name="new_exercise_label_name_sr">Naziv</string>
     <string name="new_exercise_hint_name_sr">Unesi srpski naziv</string>
-    <string name="new_exercise_label_description_sr">Opis (srpski)</string>
+    <string name="new_exercise_label_description_sr">Opis</string>
     <string name="new_exercise_hint_description_sr">Unesi srpski opis</string>
     <string name="new_exercise_label_equipment">Oprema</string>
     <string name="new_exercise_label_exercise_type">Tip vežbe</string>
@@ -47,7 +47,7 @@
     <string name="library_app_bar_subtitle">Dodaj vežbe svojim tempom</string>
     <string name="library_add_exercise">+ Dodaj novu vežbu</string>
     <string name="library_empty">Još nema vežbi</string>
-    <string name="library_syncing">Sinhronizacija...</string>
+    <string name="library_syncing">Sinhronizacija…</string>
     <string name="library_sync_failed">Sinhronizacija nije uspela, dodirni za ponovni pokušaj</string>
     <string name="library_pending_count">%1$d nije sinhronizovano</string>
 </resources>

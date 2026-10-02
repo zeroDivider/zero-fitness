@@ -34,6 +34,7 @@ import com.zero.fitness.ui.screens.common.AppButtonDefaults
 import com.zero.fitness.ui.screens.common.InteractiveBubble
 import com.zero.fitness.ui.screens.common.ScrollEdgeFadeContainer
 import com.zero.fitness.ui.screens.common.ScrollEdgeFadeDefaults
+import com.zero.fitness.ui.theme.ZeroFitnessTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,6 +50,33 @@ fun NewExerciseScreen(
         }
     }
 
+    NewExerciseScreenContent(
+        state = state,
+        onNameChange = viewModel::updateName,
+        onDescriptionChange = viewModel::updateDescription,
+        onNameSrChange = viewModel::updateNameSr,
+        onDescriptionSrChange = viewModel::updateDescriptionSr,
+        onEquipmentChange = viewModel::updateEquipment,
+        onExerciseTypeChange = viewModel::updateExerciseType,
+        onTrackWeightChange = viewModel::updateTrackWeight,
+        onNavigateUp = onNavigateUp,
+        onSave = viewModel::save
+    )
+}
+
+@Composable
+private fun NewExerciseScreenContent(
+    state: NewExerciseScreenState,
+    onNameChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
+    onNameSrChange: (String) -> Unit,
+    onDescriptionSrChange: (String) -> Unit,
+    onEquipmentChange: (Equipment) -> Unit,
+    onExerciseTypeChange: (ExerciseType) -> Unit,
+    onTrackWeightChange: (Boolean) -> Unit,
+    onNavigateUp: () -> Unit,
+    onSave: () -> Unit,
+) {
     val scrollFadeSizes = ScrollEdgeFadeDefaults.sizes()
     val scrollState = rememberScrollState()
 
@@ -81,7 +109,7 @@ fun NewExerciseScreen(
                     label = stringResource(R.string.new_exercise_save),
                     colors = AppButtonDefaults.buttonColors(),
                     isEnabled = !state.isSaving,
-                    onClickAction = viewModel::save,
+                    onClickAction = onSave,
                 )
             }
         },
@@ -101,13 +129,13 @@ fun NewExerciseScreen(
                         .padding(horizontal = 18.dp, vertical = 12.dp)
                         .padding(bottom = scrollFadeSizes.fadeHeight),
                     state = state,
-                    onNameChange = viewModel::updateName,
-                    onDescriptionChange = viewModel::updateDescription,
-                    onNameSrChange = viewModel::updateNameSr,
-                    onDescriptionSrChange = viewModel::updateDescriptionSr,
-                    onEquipmentChange = viewModel::updateEquipment,
-                    onExerciseTypeChange = viewModel::updateExerciseType,
-                    onTrackWeightChange = viewModel::updateTrackWeight,
+                    onNameChange = onNameChange,
+                    onDescriptionChange = onDescriptionChange,
+                    onNameSrChange = onNameSrChange,
+                    onDescriptionSrChange = onDescriptionSrChange,
+                    onEquipmentChange = onEquipmentChange,
+                    onExerciseTypeChange = onExerciseTypeChange,
+                    onTrackWeightChange = onTrackWeightChange,
                 )
             }
         }
@@ -127,28 +155,6 @@ private fun NewExerciseForm(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        Text(
-            text = stringResource(R.string.new_exercise_label_name),
-            style = MaterialTheme.typography.titleSmall,
-        )
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = state.name,
-            label = { Text(stringResource(R.string.new_exercise_hint_name)) },
-            onValueChange = onNameChange,
-        )
-        Text(
-            text = stringResource(R.string.new_exercise_label_description),
-            style = MaterialTheme.typography.titleSmall,
-            modifier = Modifier.padding(top = 14.dp),
-        )
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = state.description,
-            minLines = 4,
-            label = { Text(stringResource(R.string.new_exercise_hint_description)) },
-            onValueChange = onDescriptionChange,
-        )
         Text(
             text = stringResource(R.string.new_exercise_label_name_sr),
             style = MaterialTheme.typography.titleSmall,
@@ -171,6 +177,28 @@ private fun NewExerciseForm(
             minLines = 4,
             label = { Text(stringResource(R.string.new_exercise_hint_description_sr)) },
             onValueChange = onDescriptionSrChange,
+        )
+        Text(
+            text = stringResource(R.string.new_exercise_label_name),
+            style = MaterialTheme.typography.titleSmall,
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = state.name,
+            label = { Text(stringResource(R.string.new_exercise_hint_name)) },
+            onValueChange = onNameChange,
+        )
+        Text(
+            text = stringResource(R.string.new_exercise_label_description),
+            style = MaterialTheme.typography.titleSmall,
+            modifier = Modifier.padding(top = 14.dp),
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = state.description,
+            minLines = 4,
+            label = { Text(stringResource(R.string.new_exercise_hint_description)) },
+            onValueChange = onDescriptionChange,
         )
         Text(
             text = stringResource(R.string.new_exercise_label_equipment),
@@ -230,5 +258,26 @@ private fun newExerciseErrorText(error: NewExerciseError): String = when (error)
 @Preview
 @Composable
 private fun Preview() {
-    NewExerciseScreen {}
+    ZeroFitnessTheme(dynamicColor = false) {
+        NewExerciseScreenContent(
+            state = NewExerciseScreenState(
+                name = "Barbell squat",
+                description = "Sit back and stand up with the bar on your back.",
+                nameSr = "Čučanj sa šipkom",
+                descriptionSr = "Sedni unazad i ustani sa šipkom na leđima.",
+                equipment = Equipment.BARBELL,
+                selectedType = ExerciseType.COMPOUND,
+                trackWeight = true,
+            ),
+            onNameChange = {},
+            onDescriptionChange = {},
+            onNameSrChange = {},
+            onDescriptionSrChange = {},
+            onEquipmentChange = {},
+            onExerciseTypeChange = {},
+            onTrackWeightChange = {},
+            onNavigateUp = {},
+            onSave = {},
+        )
+    }
 }
