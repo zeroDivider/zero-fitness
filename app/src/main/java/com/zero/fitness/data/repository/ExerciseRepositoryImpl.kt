@@ -35,7 +35,7 @@ class ExerciseRepositoryImpl @Inject constructor(
     }
 
     override suspend fun delete(id: UUID): Result<Unit> = safeCall {
-        dao.markDeleted(id, System.currentTimeMillis())
+        dao.markDeleted(id, pending = true, System.currentTimeMillis())
     }
 
     override suspend fun sync(): Result<SyncReport> = safeCall {
@@ -52,7 +52,7 @@ class ExerciseRepositoryImpl @Inject constructor(
                     dao.hardDelete(entity.id)
                 } else {
                     remote.upsert(entity.toDto())
-                    dao.markSynced(entity.id)
+                    dao.markSynced(entity.id, entity.updatedAtEpochMs)
                 }
             }
         }
