@@ -11,6 +11,8 @@ import com.zero.fitness.ui.screens.login.loginScreen
 import com.zero.fitness.ui.screens.main.MainDestination
 import com.zero.fitness.ui.screens.main.mainScreen
 import com.zero.fitness.ui.screens.main.navigateToMain
+import com.zero.fitness.ui.screens.workout.exercise.exerciseDetailsScreen
+import com.zero.fitness.ui.screens.workout.exercise.navigateToExerciseDetails
 import com.zero.fitness.ui.screens.workout.exercise.navigateToNewExercise
 import com.zero.fitness.ui.screens.workout.exercise.newExerciseScreen
 import com.zero.fitness.ui.screens.workout.new.navigateToNewWorkout
@@ -51,6 +53,7 @@ fun AppRoot() {
         )
         mainScreen(
             onNavigateToCreateExercise = { navController.navigateToNewExercise() },
+            onNavigateToExerciseDetails = { id -> navController.navigateToExerciseDetails(id) },
             onNavigateToCreateWorkout = { navController.navigateToNewWorkout() },
             onNavigateToWorkoutPreview = { navController.navigateToPreviewWorkout() },
             onNavigateToWorkout = { navController.navigateToWorkoutSession() },
@@ -61,6 +64,10 @@ fun AppRoot() {
         )
         newExerciseScreen(
             onNavigateUp = { navController.navigateUp() },
+        )
+        exerciseDetailsScreen(
+            onNavigateUp = { navController.navigateUp() },
+            onNavigateToUpdate = { },
         )
         workoutSessionScreen(
             onNavigateUp = { navController.navigateUp() },

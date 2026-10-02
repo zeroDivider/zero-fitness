@@ -71,6 +71,23 @@
     <string name="new_exercise_hint_video_url">https://youtube.com/\u2026</string>
     <string name="new_exercise_error_video_url_invalid">Unesi važeći link</string>
 
+    <!-- Screen: Exercise details -->
+    <string name="exercise_details_app_bar_title">Detalji vežbe</string>
+    <string name="exercise_details_update">Izmeni vežbu</string>
+    <string name="exercise_details_primary_muscles">Primarni mišići</string>
+    <string name="exercise_details_properties">Svojstva</string>
+    <string name="exercise_details_equipment">Oprema</string>
+    <string name="exercise_details_track_weight">Prati težinu</string>
+    <string name="exercise_details_track_weight_yes">✓ Da</string>
+    <string name="exercise_details_track_weight_no">Ne</string>
+    <string name="exercise_details_type">Tip</string>
+    <string name="exercise_details_video_url">Video URL</string>
+    <string name="exercise_details_open_video">Otvori video</string>
+    <string name="exercise_details_loading">Učitavanje…</string>
+    <string name="exercise_details_not_found">Ova vežba nije pronađena</string>
+    <string name="exercise_details_error_storage">Vežba nije učitana</string>
+    <string name="exercise_details_error_unknown">Nešto je pošlo po zlu</string>
+
     <!-- Screen: Library -->
     <string name="library_app_bar_title">Biblioteka</string>
     <string name="library_app_bar_subtitle">Dodaj vežbe svojim tempom</string>
