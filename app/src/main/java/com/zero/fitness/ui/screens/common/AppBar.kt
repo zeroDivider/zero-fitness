@@ -48,7 +48,7 @@ object AppBarDefaults {
 @Composable
 fun AppBar(
     title: String,
-    subtitle: String,
+    subtitle: String = "",
     onBackClick: () -> Unit,
     actionButton: @Composable () -> Unit = {},
     appBarColors: AppBarDefaults.Colors = AppBarDefaults.colors()
@@ -91,11 +91,13 @@ fun AppBar(
                     text = title,
                     style = MaterialTheme.typography.headlineMedium,
                 )
-                Text(
-                    color = appBarColors.title,
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodyLarge,
-                )
+                if (subtitle.isNotBlank()) {
+                    Text(
+                        color = appBarColors.title,
+                        text = subtitle,
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
             }
         },
         actions = { actionButton() },
