@@ -9,11 +9,11 @@ import com.zero.fitness.data.remote.ExerciseRemoteDataSource
 import com.zero.fitness.domain.model.Exercise
 import com.zero.fitness.domain.model.SyncReport
 import com.zero.fitness.domain.repository.ExerciseRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 @Singleton
 class ExerciseRepositoryImpl @Inject constructor(
@@ -22,7 +22,7 @@ class ExerciseRepositoryImpl @Inject constructor(
 ) : ExerciseRepository {
 
     override fun observeAll(): Flow<List<Exercise>> =
-        dao.observeAll().map { entities -> entities.map { it.toDomain() } }
+        dao.observeAll().map { entities -> entities.mapNotNull { it.toDomain() } }
 
     override fun observePendingCount(): Flow<Int> = dao.observePendingCount()
 
@@ -31,7 +31,7 @@ class ExerciseRepositoryImpl @Inject constructor(
     }
 
     override suspend fun save(exercise: Exercise): Result<Unit> = safeCall {
-        dao.upsert(exercise.toEntity().copy(syncPending = true))
+        dao.upsert(exercise.toEntity(syncPending = true))
     }
 
     override suspend fun delete(id: UUID): Result<Unit> = safeCall {
@@ -60,6 +60,6 @@ class ExerciseRepositoryImpl @Inject constructor(
 
     private suspend fun pullRemote() {
         val remoteDtos = runCatching { remote.fetchAll() }.getOrNull() ?: return
-        dao.upsertAll(remoteDtos.map { it.toEntity(syncPending = false) })
+        dao.upsertAll(remoteDtos.mapNotNull { it.toEntity() })
     }
 }
