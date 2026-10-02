@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">zero-fitness</string>
+
+    <!-- Common: toggle -->
+    <string name="toggle_state_on">Uključeno</string>
+    <string name="toggle_state_off">Isključeno</string>
+
+    <!-- Common: exercise setting cards -->
+    <string name="exercise_track_weight_title">Prati težinu</string>
+    <string name="exercise_track_weight_subtitle">Dozvoli unos težine</string>
+
+    <!-- Common: equipment -->
+    <string name="equipment_bodyweight">Sopstvena težina</string>
+    <string name="equipment_barbell">Šipka</string>
+    <string name="equipment_dumbbell">Bučica</string>
+    <string name="equipment_kettlebell">Girja</string>
+    <string name="equipment_cable">Sajla</string>
+    <string name="equipment_machine">Mašina</string>
+    <string name="equipment_resistance_band">Elastična traka</string>
+
+    <!-- Common: exercise type -->
+    <string name="exercise_type_compound">Višezglobna</string>
+    <string name="exercise_type_isolation">Izolaciona</string>
+
+    <!-- Screen: New exercise -->
+    <string name="new_exercise_app_bar_title">Nova vežba</string>
+    <string name="new_exercise_app_bar_subtitle">Imenuj pokret i kako želiš da ga pratiš</string>
+    <string name="new_exercise_save">Sačuvaj vežbu</string>
+    <string name="new_exercise_error_name_required">Unesi naziv</string>
+    <string name="new_exercise_error_equipment_required">Izaberi opremu</string>
+    <string name="new_exercise_error_type_required">Izaberi tip vežbe</string>
+    <string name="new_exercise_error_storage">Vežba nije sačuvana</string>
+    <string name="new_exercise_error_unknown">Nešto je pošlo po zlu</string>
+    <string name="new_exercise_label_name">Naziv</string>
+    <string name="new_exercise_hint_name">Unesi naziv</string>
+    <string name="new_exercise_label_description">Opis</string>
+    <string name="new_exercise_hint_description">Unesi kratak opis</string>
+    <string name="new_exercise_label_name_sr">Naziv (srpski)</string>
+    <string name="new_exercise_hint_name_sr">Unesi srpski naziv</string>
+    <string name="new_exercise_label_description_sr">Opis (srpski)</string>
+    <string name="new_exercise_hint_description_sr">Unesi srpski opis</string>
+    <string name="new_exercise_label_equipment">Oprema</string>
+    <string name="new_exercise_label_exercise_type">Tip vežbe</string>
+
+    <!-- Screen: Library -->
+    <string name="library_app_bar_title">Biblioteka</string>
+    <string name="library_app_bar_subtitle">Dodaj vežbe svojim tempom</string>
+    <string name="library_add_exercise">+ Dodaj novu vežbu</string>
+    <string name="library_empty">Još nema vežbi</string>
+    <string name="library_syncing">Sinhronizacija...</string>
+    <string name="library_sync_failed">Sinhronizacija nije uspela, dodirni za ponovni pokušaj</string>
+    <string name="library_pending_count">%1$d nije sinhronizovano</string>
+</resources>

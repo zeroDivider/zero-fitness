@@ -27,7 +27,7 @@ Mirror `AppButtonDefaults`, `BubblesDefaults`, `AppBarDefaults`, and `AppToggleD
 
 ## Strings
 
-- User-facing and accessibility copy: `app/src/main/res/values/strings.xml`. Mirror new keys in every existing `app/src/main/res/values-*/strings.xml` locale folder (currently default `values/` only unless more exist).
+- User-facing and accessibility copy: `app/src/main/res/values/strings.xml`. Mirror and translate every new key in every existing locale file (`values-sr/strings.xml` today). See `.cursor/rules/zero-fitness-strings.mdc`.
 - Load with `stringResource(R.string.*)` — not hardcoded production strings.
 - Generic shared composables take `String` parameters where needed; feature-specific layouts and copy belong under the feature package (for example `TrackWeightToggleSettingCard` in `ui/screens/workout/exercise/`).
 - Previews use the same `stringResource` keys as production. Do not use preview-only literals or stale-`R` workarounds; rebuild the app module if generated `R` is out of date.
