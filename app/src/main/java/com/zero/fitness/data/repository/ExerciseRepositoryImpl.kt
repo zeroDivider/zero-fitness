@@ -1,11 +1,13 @@
 package com.zero.fitness.data.repository
 
+import com.zero.fitness.core.result.safeCall
 import com.zero.fitness.data.local.db.dao.ExerciseDao
 import com.zero.fitness.data.mapper.toDomain
 import com.zero.fitness.data.mapper.toDto
 import com.zero.fitness.data.mapper.toEntity
 import com.zero.fitness.data.remote.ExerciseRemoteDataSource
 import com.zero.fitness.domain.model.Exercise
+import com.zero.fitness.domain.model.SyncReport
 import com.zero.fitness.domain.repository.ExerciseRepository
 import java.util.UUID
 import javax.inject.Inject
@@ -22,20 +24,24 @@ class ExerciseRepositoryImpl @Inject constructor(
     override fun observeAll(): Flow<List<Exercise>> =
         dao.observeAll().map { entities -> entities.map { it.toDomain() } }
 
-    override suspend fun getById(id: UUID): Exercise? =
-        dao.getById(id)?.toDomain()
+    override fun observePendingCount(): Flow<Int> = dao.observePendingCount()
 
-    override suspend fun save(exercise: Exercise) {
+    override suspend fun getById(id: UUID): Result<Exercise?> = safeCall {
+        dao.getById(id)?.toDomain()
+    }
+
+    override suspend fun save(exercise: Exercise): Result<Unit> = safeCall {
         dao.upsert(exercise.toEntity().copy(syncPending = true))
     }
 
-    override suspend fun delete(id: UUID) {
+    override suspend fun delete(id: UUID): Result<Unit> = safeCall {
         dao.markDeleted(id, System.currentTimeMillis())
     }
 
-    override suspend fun sync() {
+    override suspend fun sync(): Result<SyncReport> = safeCall {
         pushPending()
         pullRemote()
+        SyncReport(pushed = 0, failed = 0, pulled = 0)
     }
 
     private suspend fun pushPending() {

@@ -14,7 +14,8 @@ data class Exercise(
     val muscleGroups: List<MuscleGroup> = emptyList(),
     val difficulty: DifficultyLevel? = null,
     val isCompound: Boolean = true,
-    val videoUrl: String? = null
+    val videoUrl: String? = null,
+    val updatedAtEpochMs: Long,
 )
 
 data class WorkoutPlan(
