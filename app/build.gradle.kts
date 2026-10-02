@@ -92,6 +92,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.bundles.test)
     androidTestImplementation(platform(libs.androidx.compose.bom))
 
