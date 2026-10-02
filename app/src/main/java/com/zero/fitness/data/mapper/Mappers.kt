@@ -24,9 +24,14 @@ private fun List<String>.toCsv(): String? =
 private inline fun <reified T : Enum<T>> String.toEnumOrNull(): T? =
     enumValues<T>().firstOrNull { it.name == this }
 
+private fun String.toMuscleGroupOrNull(): MuscleGroup? = when (this) {
+    "BACK" -> MuscleGroup.UPPER_BACK
+    else -> toEnumOrNull<MuscleGroup>()
+}
+
 fun ExerciseEntity.toDomain(): Exercise? {
     val parsedEquipment = equipment?.let { it.toEnumOrNull<Equipment>() ?: return null }
-    val parsedGroups = muscleGroupsCsv.toStringList().map { it.toEnumOrNull<MuscleGroup>() ?: return null }
+    val parsedGroups = muscleGroupsCsv.toStringList().map { it.toMuscleGroupOrNull() ?: return null }
     val parsedDifficulty = difficulty?.let { it.toEnumOrNull<DifficultyLevel>() ?: return null }
     return Exercise(
         id = id,
@@ -82,7 +87,7 @@ fun ExerciseEntity.toDto(): ExerciseDto =
 fun ExerciseDto.toEntity(): ExerciseEntity? {
     if (equipment != null && equipment.toEnumOrNull<Equipment>() == null) return null
     if (difficulty != null && difficulty.toEnumOrNull<DifficultyLevel>() == null) return null
-    if (muscleGroupsCsv.toStringList().any { it.toEnumOrNull<MuscleGroup>() == null }) return null
+    val parsedGroups = muscleGroupsCsv.toStringList().map { it.toMuscleGroupOrNull() ?: return null }
     return ExerciseEntity(
         id = UUID.fromString(id),
         name = name,
@@ -91,7 +96,7 @@ fun ExerciseDto.toEntity(): ExerciseEntity? {
         descriptionSr = descriptionSr,
         allowWeight = allowWeight,
         equipment = equipment,
-        muscleGroupsCsv = muscleGroupsCsv,
+        muscleGroupsCsv = parsedGroups.map { it.name }.toCsv(),
         difficulty = difficulty,
         isCompound = isCompound,
         videoUrl = videoUrl,
