@@ -21,23 +21,30 @@ private fun String?.toStringList(): List<String> =
 private fun List<String>.toCsv(): String? =
     this.map { it.trim() }.filter { it.isNotEmpty() }.takeIf { it.isNotEmpty() }?.joinToString(",")
 
-fun ExerciseEntity.toDomain(): Exercise =
-    Exercise(
+private inline fun <reified T : Enum<T>> String.toEnumOrNull(): T? =
+    enumValues<T>().firstOrNull { it.name == this }
+
+fun ExerciseEntity.toDomain(): Exercise? {
+    val parsedEquipment = equipment?.let { it.toEnumOrNull<Equipment>() ?: return null }
+    val parsedGroups = muscleGroupsCsv.toStringList().map { it.toEnumOrNull<MuscleGroup>() ?: return null }
+    val parsedDifficulty = difficulty?.let { it.toEnumOrNull<DifficultyLevel>() ?: return null }
+    return Exercise(
         id = id,
         name = name,
         description = description,
         nameSr = nameSr,
         descriptionSr = descriptionSr,
         allowWeight = allowWeight,
-        equipment = equipment?.let { Equipment.valueOf(it) },
-        muscleGroups = muscleGroupsCsv.toStringList().map { MuscleGroup.valueOf(it) },
-        difficulty = difficulty?.let { DifficultyLevel.valueOf(it) },
+        equipment = parsedEquipment,
+        muscleGroups = parsedGroups,
+        difficulty = parsedDifficulty,
         isCompound = isCompound,
         videoUrl = videoUrl,
         updatedAtEpochMs = updatedAtEpochMs,
     )
+}
 
-fun Exercise.toEntity(nowEpochMs: Long = System.currentTimeMillis()): ExerciseEntity =
+fun Exercise.toEntity(syncPending: Boolean): ExerciseEntity =
     ExerciseEntity(
         id = id,
         name = name,
@@ -45,12 +52,14 @@ fun Exercise.toEntity(nowEpochMs: Long = System.currentTimeMillis()): ExerciseEn
         nameSr = nameSr,
         descriptionSr = descriptionSr,
         allowWeight = allowWeight,
-        equipment = equipment.toString(),
+        equipment = equipment?.name,
         muscleGroupsCsv = muscleGroups.map { it.name }.toCsv(),
         difficulty = difficulty?.name,
         isCompound = isCompound,
         videoUrl = videoUrl,
-        updatedAtEpochMs = nowEpochMs,
+        updatedAtEpochMs = updatedAtEpochMs,
+        syncPending = syncPending,
+        deletedLocally = false,
     )
 
 fun ExerciseEntity.toDto(): ExerciseDto =
@@ -70,11 +79,11 @@ fun ExerciseEntity.toDto(): ExerciseDto =
         updatedAtEpochMs = updatedAtEpochMs,
     )
 
-fun ExerciseDto.toEntity(
-    syncPending: Boolean = false,
-    deletedLocally: Boolean = false,
-): ExerciseEntity =
-    ExerciseEntity(
+fun ExerciseDto.toEntity(): ExerciseEntity? {
+    if (equipment != null && equipment.toEnumOrNull<Equipment>() == null) return null
+    if (difficulty != null && difficulty.toEnumOrNull<DifficultyLevel>() == null) return null
+    if (muscleGroupsCsv.toStringList().any { it.toEnumOrNull<MuscleGroup>() == null }) return null
+    return ExerciseEntity(
         id = UUID.fromString(id),
         name = name,
         description = description,
@@ -88,9 +97,10 @@ fun ExerciseDto.toEntity(
         videoUrl = videoUrl,
         createdAtEpochMs = createdAtEpochMs,
         updatedAtEpochMs = updatedAtEpochMs,
-        syncPending = syncPending,
-        deletedLocally = deletedLocally,
+        syncPending = false,
+        deletedLocally = false,
     )
+}
 
 fun PlannedSetEntity.toDomain(): PlannedSet {
     val target: com.zero.fitness.domain.model.WorkoutTarget = when {
