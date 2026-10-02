@@ -31,6 +31,9 @@ class ExerciseRepositoryImpl @Inject constructor(
 
     override fun observePendingCount(): Flow<Int> = dao.observePendingCount()
 
+    override fun observeById(id: UUID): Flow<Exercise?> =
+        dao.observeById(id).map { entity -> entity?.toDomain() }
+
     override suspend fun getById(id: UUID): Result<Exercise?> = safeCall {
         dao.getById(id)?.toDomain()
     }

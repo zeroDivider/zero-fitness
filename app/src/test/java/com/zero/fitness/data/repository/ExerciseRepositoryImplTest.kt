@@ -190,6 +190,10 @@ private class FakeExerciseDao : ExerciseDao {
         emit(rows.values.count { it.syncPending })
     }
 
+    override fun observeById(id: UUID): Flow<ExerciseEntity?> = flow {
+        emit(rows[id]?.takeUnless { it.deletedLocally })
+    }
+
     override suspend fun getById(id: UUID): ExerciseEntity? =
         rows[id]?.takeUnless { it.deletedLocally }
 

@@ -17,6 +17,9 @@ interface ExerciseDao {
     fun observePendingCount(): Flow<Int>
 
     @Query("SELECT * FROM exercises WHERE id = :id AND deletedLocally = 0")
+    fun observeById(id: UUID): Flow<ExerciseEntity?>
+
+    @Query("SELECT * FROM exercises WHERE id = :id AND deletedLocally = 0")
     suspend fun getById(id: UUID): ExerciseEntity?
 
     @Query("SELECT * FROM exercises WHERE id = :id")
