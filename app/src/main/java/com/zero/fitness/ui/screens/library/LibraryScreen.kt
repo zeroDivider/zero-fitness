@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -27,11 +28,13 @@ import com.zero.fitness.ui.resources.labelRes
 import com.zero.fitness.ui.screens.common.AppBar
 import com.zero.fitness.ui.screens.common.AppButton
 import com.zero.fitness.ui.screens.common.AppButtonDefaults
+import java.util.UUID
 
 @Composable
 fun LibraryScreen(
     onNavigateUp: () -> Unit,
     onNavigateToNewExercise: () -> Unit,
+    onNavigateToExerciseDetails: (UUID) -> Unit,
     viewModel: LibraryViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -73,7 +76,10 @@ fun LibraryScreen(
                         modifier = Modifier.weight(1f),
                     ) {
                         items(state.exercises, key = { it.id }) { exercise ->
-                            LibraryExerciseRow(exercise)
+                            LibraryExerciseRow(
+                                exercise = exercise,
+                                onClick = { onNavigateToExerciseDetails(exercise.id) },
+                            )
                         }
                     }
                 }
@@ -114,10 +120,14 @@ private fun LibrarySyncStatus(
 }
 
 @Composable
-private fun LibraryExerciseRow(exercise: Exercise) {
+private fun LibraryExerciseRow(
+    exercise: Exercise,
+    onClick: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(role = Role.Button, onClick = onClick)
             .padding(vertical = 8.dp),
     ) {
         Text(
@@ -137,5 +147,5 @@ private fun LibraryExerciseRow(exercise: Exercise) {
 @Composable
 @Preview
 private fun Preview() {
-    LibraryScreen({}, {})
+    LibraryScreen({}, {}, {})
 }

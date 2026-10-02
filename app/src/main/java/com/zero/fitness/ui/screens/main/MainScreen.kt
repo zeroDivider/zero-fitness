@@ -33,11 +33,13 @@ import com.zero.fitness.ui.screens.library.navigateToLibrary
 import com.zero.fitness.ui.screens.profile.ProfileDestination
 import com.zero.fitness.ui.screens.profile.navigateToProfile
 import com.zero.fitness.ui.screens.profile.profileScreen
+import java.util.UUID
 
 
 @Composable
 fun MainScreen(
     onNavigateToCreateExercise: () -> Unit,
+    onNavigateToExerciseDetails: (UUID) -> Unit,
     onNavigateToCreateWorkout: () -> Unit,
     onNavigateToWorkoutPreview: () -> Unit,
     onNavigateToWorkout: () -> Unit,
@@ -68,6 +70,7 @@ fun MainScreen(
             libraryScreen(
                 onNavigateUp = { navController.navigateUp() },
                 onNavigateToNewExercise = onNavigateToCreateExercise,
+                onNavigateToExerciseDetails = onNavigateToExerciseDetails,
             )
             historyScreen(
                 onNavigateUp = { navController.navigateUp() },
