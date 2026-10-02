@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -212,6 +213,9 @@ class FakeExerciseRepository(
     override fun observeAll(): Flow<List<Exercise>> = exercises
 
     override fun observePendingCount(): Flow<Int> = pendingCount
+
+    override fun observeById(id: UUID): Flow<Exercise?> =
+        exercises.map { list -> list.find { it.id == id } }
 
     override suspend fun getById(id: UUID): Result<Exercise?> = Result.success(null)
 
