@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,15 +26,26 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zero.fitness.R
+import com.zero.fitness.domain.model.DifficultyLevel
 import com.zero.fitness.domain.model.Equipment
 import com.zero.fitness.domain.model.ExerciseType
+import com.zero.fitness.domain.model.MuscleGroup
 import com.zero.fitness.ui.resources.labelRes
 import com.zero.fitness.ui.screens.common.AppBar
 import com.zero.fitness.ui.screens.common.AppButton
 import com.zero.fitness.ui.screens.common.AppButtonDefaults
+import com.zero.fitness.ui.screens.common.BubblesDefaults
 import com.zero.fitness.ui.screens.common.InteractiveBubble
 import com.zero.fitness.ui.screens.common.ScrollEdgeFadeContainer
 import com.zero.fitness.ui.screens.common.ScrollEdgeFadeDefaults
+import com.zero.fitness.ui.theme.Coral
+import com.zero.fitness.ui.theme.DarkPurple
+import com.zero.fitness.ui.theme.Gray
+import com.zero.fitness.ui.theme.Green
+import com.zero.fitness.ui.theme.LightGray
+import com.zero.fitness.ui.theme.Transparent
+import com.zero.fitness.ui.theme.White
+import com.zero.fitness.ui.theme.Yellow
 import com.zero.fitness.ui.theme.ZeroFitnessTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,6 +71,9 @@ fun NewExerciseScreen(
         onEquipmentChange = viewModel::updateEquipment,
         onExerciseTypeChange = viewModel::updateExerciseType,
         onTrackWeightChange = viewModel::updateTrackWeight,
+        onMuscleGroupToggle = viewModel::toggleMuscleGroup,
+        onDifficultyChange = viewModel::updateDifficulty,
+        onVideoUrlChange = viewModel::updateVideoUrl,
         onNavigateUp = onNavigateUp,
         onSave = viewModel::save
     )
@@ -74,6 +89,9 @@ private fun NewExerciseScreenContent(
     onEquipmentChange: (Equipment) -> Unit,
     onExerciseTypeChange: (ExerciseType) -> Unit,
     onTrackWeightChange: (Boolean) -> Unit,
+    onMuscleGroupToggle: (MuscleGroup) -> Unit,
+    onDifficultyChange: (DifficultyLevel) -> Unit,
+    onVideoUrlChange: (String) -> Unit,
     onNavigateUp: () -> Unit,
     onSave: () -> Unit,
 ) {
@@ -136,6 +154,9 @@ private fun NewExerciseScreenContent(
                     onEquipmentChange = onEquipmentChange,
                     onExerciseTypeChange = onExerciseTypeChange,
                     onTrackWeightChange = onTrackWeightChange,
+                    onMuscleGroupToggle = onMuscleGroupToggle,
+                    onDifficultyChange = onDifficultyChange,
+                    onVideoUrlChange = onVideoUrlChange,
                 )
             }
         }
@@ -152,8 +173,22 @@ private fun NewExerciseForm(
     onEquipmentChange: (Equipment) -> Unit,
     onExerciseTypeChange: (ExerciseType) -> Unit,
     onTrackWeightChange: (Boolean) -> Unit,
+    onMuscleGroupToggle: (MuscleGroup) -> Unit,
+    onDifficultyChange: (DifficultyLevel) -> Unit,
+    onVideoUrlChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val muscleBubbleColors = BubblesDefaults.bubbleColors(
+        backgroundSelected = Coral,
+        borderSelected = Coral,
+    )
+    val compactBubbleSize = BubblesDefaults.bubbleSize(
+        borderRadius = 8.dp,
+        borderWidth = 0.dp,
+        verticalPadding = 8.dp,
+        horizontalPadding = 4.dp,
+    )
+
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.new_exercise_label_name_sr),
@@ -243,14 +278,86 @@ private fun NewExerciseForm(
             checked = state.trackWeight,
             onCheckedChange = onTrackWeightChange,
         )
+        Text(
+            text = stringResource(R.string.new_exercise_label_muscle_groups),
+            style = MaterialTheme.typography.titleSmall,
+            modifier = Modifier.padding(top = 14.dp),
+        )
+        FlowRow(
+            modifier = Modifier.padding(top = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            MuscleGroup.entries.forEach { group ->
+                InteractiveBubble(
+                    label = stringResource(group.labelRes()),
+                    isSelected = group in state.muscleGroups,
+                    colors = muscleBubbleColors,
+                    onClickAction = { onMuscleGroupToggle(group) },
+                )
+            }
+        }
+        Text(
+            text = stringResource(R.string.new_exercise_label_difficulty),
+            style = MaterialTheme.typography.titleSmall,
+            modifier = Modifier.padding(top = 14.dp),
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            DifficultyLevel.entries.forEach { level ->
+                InteractiveBubble(
+                    modifier = Modifier.weight(1f),
+                    label = stringResource(level.labelRes()),
+                    isSelected = level == state.difficulty,
+                    colors = difficultyLevelBubbleColors(level),
+                    sizes = compactBubbleSize,
+                    style = MaterialTheme.typography.labelSmall,
+                    maxLines = 1,
+                    onClickAction = { onDifficultyChange(level) },
+                )
+            }
+        }
+        Text(
+            text = stringResource(R.string.new_exercise_label_video_url),
+            style = MaterialTheme.typography.titleSmall,
+            modifier = Modifier.padding(top = 14.dp),
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = state.videoUrl,
+            label = { Text(stringResource(R.string.new_exercise_hint_video_url)) },
+            onValueChange = onVideoUrlChange,
+        )
     }
 }
+
+@Composable
+private fun difficultyLevelBubbleColors(
+    level: DifficultyLevel,
+): BubblesDefaults.BubbleColors = BubblesDefaults.bubbleColors(
+    background = LightGray,
+    backgroundSelected = when (level) {
+        DifficultyLevel.BEGINNER -> Green
+        DifficultyLevel.INTERMEDIATE -> Yellow
+        DifficultyLevel.ADVANCED -> Coral
+        DifficultyLevel.ELITE -> DarkPurple
+    },
+    border = Transparent,
+    borderSelected = Transparent,
+    label = Gray,
+    labelSelected = if (level == DifficultyLevel.INTERMEDIATE) DarkPurple else White,
+)
 
 @Composable
 private fun newExerciseErrorText(error: NewExerciseError): String = when (error) {
     NewExerciseError.NameRequired -> stringResource(R.string.new_exercise_error_name_required)
     NewExerciseError.EquipmentRequired -> stringResource(R.string.new_exercise_error_equipment_required)
     NewExerciseError.TypeRequired -> stringResource(R.string.new_exercise_error_type_required)
+    NewExerciseError.VideoUrlInvalid -> stringResource(R.string.new_exercise_error_video_url_invalid)
     NewExerciseError.Storage -> stringResource(R.string.new_exercise_error_storage)
     NewExerciseError.Unknown -> stringResource(R.string.new_exercise_error_unknown)
 }
@@ -268,6 +375,9 @@ private fun Preview() {
                 equipment = Equipment.BARBELL,
                 selectedType = ExerciseType.COMPOUND,
                 trackWeight = true,
+                muscleGroups = setOf(MuscleGroup.QUADS, MuscleGroup.GLUTES),
+                difficulty = DifficultyLevel.INTERMEDIATE,
+                videoUrl = "https://youtube.com/watch?v=example",
             ),
             onNameChange = {},
             onDescriptionChange = {},
@@ -276,6 +386,9 @@ private fun Preview() {
             onEquipmentChange = {},
             onExerciseTypeChange = {},
             onTrackWeightChange = {},
+            onMuscleGroupToggle = {},
+            onDifficultyChange = {},
+            onVideoUrlChange = {},
             onNavigateUp = {},
             onSave = {},
         )

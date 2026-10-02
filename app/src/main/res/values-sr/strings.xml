@@ -22,6 +22,25 @@
     <string name="exercise_type_compound">Višezglobna</string>
     <string name="exercise_type_isolation">Izolaciona</string>
 
+    <!-- Common: muscle group -->
+    <string name="muscle_group_chest">Grudi</string>
+    <string name="muscle_group_back">Leđa</string>
+    <string name="muscle_group_shoulders">Ramena</string>
+    <string name="muscle_group_biceps">Biceps</string>
+    <string name="muscle_group_triceps">Triceps</string>
+    <string name="muscle_group_core">Trup</string>
+    <string name="muscle_group_quads">Kvadriceps</string>
+    <string name="muscle_group_hamstrings">Zadnja loža</string>
+    <string name="muscle_group_glutes">Gluteusi</string>
+    <string name="muscle_group_calves">Listovi</string>
+    <string name="muscle_group_lower_back">Donja leđa</string>
+
+    <!-- Common: difficulty -->
+    <string name="difficulty_beginner">Početni</string>
+    <string name="difficulty_intermediate">Srednji</string>
+    <string name="difficulty_advanced">Napredni</string>
+    <string name="difficulty_elite">Elita</string>
+
     <!-- Screen: New exercise -->
     <string name="new_exercise_app_bar_title">Nova vežba</string>
     <string name="new_exercise_app_bar_subtitle">Imenuj pokret i kako želiš da ga pratiš</string>
@@ -41,6 +60,11 @@
     <string name="new_exercise_hint_description_sr">Unesi srpski opis</string>
     <string name="new_exercise_label_equipment">Oprema</string>
     <string name="new_exercise_label_exercise_type">Tip vežbe</string>
+    <string name="new_exercise_label_muscle_groups">Primarne mišićne grupe</string>
+    <string name="new_exercise_label_difficulty">Nivo težine</string>
+    <string name="new_exercise_label_video_url">Video URL (opciono)</string>
+    <string name="new_exercise_hint_video_url">https://youtube.com/\u2026</string>
+    <string name="new_exercise_error_video_url_invalid">Unesi važeći link</string>
 
     <!-- Screen: Library -->
     <string name="library_app_bar_title">Biblioteka</string>
