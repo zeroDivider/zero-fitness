@@ -22,14 +22,19 @@ enum class Equipment {
 
 enum class MuscleGroup {
     CHEST,
-    BACK,
     SHOULDERS,
-    BICEPS,
     TRICEPS,
+    LATS,
+    UPPER_BACK,
+    TRAPS,
+    BICEPS,
+    FOREARMS,
     CORE,
+    LOWER_BACK,
     QUADS,
     HAMSTRINGS,
     GLUTES,
+    ADDUCTORS,
+    ABDUCTORS,
     CALVES,
-    LOWER_BACK
 }

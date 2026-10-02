@@ -27,16 +27,21 @@ fun ExerciseType.labelRes(): Int = when (this) {
 @StringRes
 fun MuscleGroup.labelRes(): Int = when (this) {
     MuscleGroup.CHEST -> R.string.muscle_group_chest
-    MuscleGroup.BACK -> R.string.muscle_group_back
     MuscleGroup.SHOULDERS -> R.string.muscle_group_shoulders
-    MuscleGroup.BICEPS -> R.string.muscle_group_biceps
     MuscleGroup.TRICEPS -> R.string.muscle_group_triceps
+    MuscleGroup.LATS -> R.string.muscle_group_lats
+    MuscleGroup.UPPER_BACK -> R.string.muscle_group_upper_back
+    MuscleGroup.TRAPS -> R.string.muscle_group_traps
+    MuscleGroup.BICEPS -> R.string.muscle_group_biceps
+    MuscleGroup.FOREARMS -> R.string.muscle_group_forearms
     MuscleGroup.CORE -> R.string.muscle_group_core
+    MuscleGroup.LOWER_BACK -> R.string.muscle_group_lower_back
     MuscleGroup.QUADS -> R.string.muscle_group_quads
     MuscleGroup.HAMSTRINGS -> R.string.muscle_group_hamstrings
     MuscleGroup.GLUTES -> R.string.muscle_group_glutes
+    MuscleGroup.ADDUCTORS -> R.string.muscle_group_adductors
+    MuscleGroup.ABDUCTORS -> R.string.muscle_group_abductors
     MuscleGroup.CALVES -> R.string.muscle_group_calves
-    MuscleGroup.LOWER_BACK -> R.string.muscle_group_lower_back
 }
 
 @StringRes

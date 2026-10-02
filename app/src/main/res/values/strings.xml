@@ -24,16 +24,21 @@
 
     <!-- Common: muscle group -->
     <string name="muscle_group_chest">Chest</string>
-    <string name="muscle_group_back">Back</string>
     <string name="muscle_group_shoulders">Shoulders</string>
-    <string name="muscle_group_biceps">Biceps</string>
     <string name="muscle_group_triceps">Triceps</string>
+    <string name="muscle_group_lats">Lats</string>
+    <string name="muscle_group_upper_back">Upper back</string>
+    <string name="muscle_group_traps">Traps</string>
+    <string name="muscle_group_biceps">Biceps</string>
+    <string name="muscle_group_forearms">Forearms</string>
     <string name="muscle_group_core">Core</string>
+    <string name="muscle_group_lower_back">Lower Back</string>
     <string name="muscle_group_quads">Quads</string>
     <string name="muscle_group_hamstrings">Hamstrings</string>
     <string name="muscle_group_glutes">Glutes</string>
+    <string name="muscle_group_adductors">Adductors</string>
+    <string name="muscle_group_abductors">Abductors</string>
     <string name="muscle_group_calves">Calves</string>
-    <string name="muscle_group_lower_back">Lower Back</string>
 
     <!-- Common: difficulty -->
     <string name="difficulty_beginner">Beginner</string>
