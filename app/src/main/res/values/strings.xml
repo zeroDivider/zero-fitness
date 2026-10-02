@@ -41,4 +41,13 @@
     <string name="new_exercise_hint_description_sr">Enter Serbian description</string>
     <string name="new_exercise_label_equipment">Equipment</string>
     <string name="new_exercise_label_exercise_type">Exercise Type</string>
+
+    <!-- Screen: Library -->
+    <string name="library_app_bar_title">Library screen</string>
+    <string name="library_app_bar_subtitle">Add exercises by your own pace...</string>
+    <string name="library_add_exercise">+ Add New Exercise</string>
+    <string name="library_empty">No exercises yet</string>
+    <string name="library_syncing">Syncing...</string>
+    <string name="library_sync_failed">Sync failed, tap to retry</string>
+    <string name="library_pending_count">%1$d not synced</string>
 </resources>
