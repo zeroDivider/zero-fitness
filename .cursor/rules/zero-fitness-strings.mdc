@@ -1,0 +1,37 @@
+---
+description: Keep every locale's strings.xml in sync when copy is added
+globs: app/src/main/res/**/strings.xml,app/src/main/java/com/zero/fitness/ui/**/*.kt
+alwaysApply: false
+---
+
+# String localization
+
+User-facing copy lives in Android resources. Default English is
+`app/src/main/res/values/strings.xml`.
+
+Locales currently in this project:
+
+- `values/` — default (English)
+- `values-sr/` — Serbian (Latin)
+
+## When adding or changing a string
+
+1. Put the key in `values/strings.xml`.
+2. Add the **same key** to every other `app/src/main/res/values-*/strings.xml`.
+3. Translate the value. Keep format placeholders (`%1$d`, `%s`) and argument order.
+4. Keep the same XML comment groups as the default file.
+5. Do not leave a new key in English-only; Android would fall back for other locales.
+
+```xml
+<!-- values/strings.xml -->
+<string name="library_empty">No exercises yet</string>
+
+<!-- values-sr/strings.xml -->
+<string name="library_empty">Još nema vežbi</string>
+```
+
+Brand names such as `app_name` may stay unchanged in every locale.
+
+If you add a new `values-<locale>/` folder, copy every key from `values/strings.xml`
+and translate that full file. Preview-only literals in `@Preview` functions stay
+on `stringResource` keys, not hardcoded text.
