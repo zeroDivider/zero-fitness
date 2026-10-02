@@ -1,9 +1,9 @@
 package com.zero.fitness.data.mapper
 
-import com.zero.fitness.data.remote.dto.ExerciseDto
 import com.zero.fitness.data.local.db.entity.ExerciseEntity
 import com.zero.fitness.data.local.db.entity.PlannedSetEntity
 import com.zero.fitness.data.local.db.entity.SessionSetResultEntity
+import com.zero.fitness.data.remote.dto.ExerciseDto
 import com.zero.fitness.domain.model.DifficultyLevel
 import com.zero.fitness.domain.model.Equipment
 import com.zero.fitness.domain.model.Exercise
@@ -33,7 +33,8 @@ fun ExerciseEntity.toDomain(): Exercise =
         muscleGroups = muscleGroupsCsv.toStringList().map { MuscleGroup.valueOf(it) },
         difficulty = difficulty?.let { DifficultyLevel.valueOf(it) },
         isCompound = isCompound,
-        videoUrl = videoUrl
+        videoUrl = videoUrl,
+        updatedAtEpochMs = updatedAtEpochMs,
     )
 
 fun Exercise.toEntity(nowEpochMs: Long = System.currentTimeMillis()): ExerciseEntity =
