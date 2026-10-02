@@ -70,6 +70,9 @@
     <string name="new_exercise_label_video_url">Video URL (optional)</string>
     <string name="new_exercise_hint_video_url">https://youtube.com/\u2026</string>
     <string name="new_exercise_error_video_url_invalid">Enter a valid link</string>
+    <string name="new_exercise_app_bar_title_edit">Edit exercise</string>
+    <string name="new_exercise_app_bar_subtitle_edit">Update the movement and how you want to track it</string>
+    <string name="new_exercise_error_not_found">This exercise could not be found</string>
 
     <!-- Screen: Exercise details -->
     <string name="exercise_details_app_bar_title">Exercise Detail</string>

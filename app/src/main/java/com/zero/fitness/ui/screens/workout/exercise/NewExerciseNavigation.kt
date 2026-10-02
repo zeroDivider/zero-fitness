@@ -3,11 +3,11 @@ package com.zero.fitness.ui.screens.workout.exercise
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import java.util.UUID
 import kotlinx.serialization.Serializable
 
-
 @Serializable
-data object NewExerciseDestination
+data class NewExerciseDestination(val exerciseId: String = "")
 
 fun NavGraphBuilder.newExerciseScreen(
     onNavigateUp: () -> Unit,
@@ -19,6 +19,10 @@ fun NavGraphBuilder.newExerciseScreen(
     }
 }
 
-fun NavController.navigateToNewExercise() {
-    navigate(NewExerciseDestination)
+fun NavController.navigateToNewExercise(exerciseId: String? = null) {
+    navigate(NewExerciseDestination(exerciseId = exerciseId.orEmpty()))
+}
+
+fun NavController.navigateToNewExercise(exerciseId: UUID) {
+    navigate(NewExerciseDestination(exerciseId = exerciseId.toString()))
 }

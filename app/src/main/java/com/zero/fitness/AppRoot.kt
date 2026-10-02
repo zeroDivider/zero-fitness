@@ -67,7 +67,7 @@ fun AppRoot() {
         )
         exerciseDetailsScreen(
             onNavigateUp = { navController.navigateUp() },
-            onNavigateToUpdate = { },
+            onNavigateToUpdate = { id -> navController.navigateToNewExercise(id) },
         )
         workoutSessionScreen(
             onNavigateUp = { navController.navigateUp() },

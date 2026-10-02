@@ -1,6 +1,7 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
 package com.zero.fitness.ui.screens.workout.exercise
 
+import androidx.lifecycle.SavedStateHandle
 import com.zero.fitness.domain.model.DifficultyLevel
 import com.zero.fitness.domain.model.Equipment
 import com.zero.fitness.domain.model.Exercise
@@ -8,6 +9,7 @@ import com.zero.fitness.domain.model.ExerciseType
 import com.zero.fitness.domain.model.MuscleGroup
 import com.zero.fitness.domain.model.SyncReport
 import com.zero.fitness.domain.repository.ExerciseRepository
+import java.util.UUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +24,6 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.util.UUID
 
 class NewExerciseViewModelTest {
 
@@ -38,7 +39,7 @@ class NewExerciseViewModelTest {
 
     @Test
     fun toggleMuscleGroupAddsAndRemoves() {
-        val viewModel = NewExerciseViewModel(FakeExerciseRepository())
+        val viewModel = createViewModel()
 
         viewModel.toggleMuscleGroup(MuscleGroup.GLUTES)
         assertEquals(setOf(MuscleGroup.GLUTES), viewModel.viewState.value.muscleGroups)
@@ -55,7 +56,7 @@ class NewExerciseViewModelTest {
 
     @Test
     fun updateDifficultySelectsSingleLevel() {
-        val viewModel = NewExerciseViewModel(FakeExerciseRepository())
+        val viewModel = createViewModel()
 
         viewModel.updateDifficulty(DifficultyLevel.BEGINNER)
         viewModel.updateDifficulty(DifficultyLevel.ELITE)
@@ -66,7 +67,7 @@ class NewExerciseViewModelTest {
     @Test
     fun saveRejectsInvalidVideoUrl() = runTest {
         val repository = FakeExerciseRepository()
-        val viewModel = NewExerciseViewModel(repository)
+        val viewModel = createViewModel(repository)
         viewModel.fillRequiredFields()
         viewModel.updateVideoUrl("youtube.com/watch")
 
@@ -79,7 +80,7 @@ class NewExerciseViewModelTest {
     @Test
     fun saveMapsBlankVideoUrlToNull() = runTest {
         val repository = FakeExerciseRepository()
-        val viewModel = NewExerciseViewModel(repository)
+        val viewModel = createViewModel(repository)
         viewModel.fillRequiredFields()
         viewModel.updateVideoUrl("   ")
 
@@ -92,7 +93,7 @@ class NewExerciseViewModelTest {
     @Test
     fun saveIncludesMuscleGroupsDifficultyAndVideoUrl() = runTest {
         val repository = FakeExerciseRepository()
-        val viewModel = NewExerciseViewModel(repository)
+        val viewModel = createViewModel(repository)
         viewModel.fillRequiredFields()
         viewModel.toggleMuscleGroup(MuscleGroup.QUADS)
         viewModel.toggleMuscleGroup(MuscleGroup.GLUTES)
@@ -106,7 +107,52 @@ class NewExerciseViewModelTest {
         assertEquals(DifficultyLevel.INTERMEDIATE, saved.difficulty)
         assertEquals("https://youtube.com/watch?v=example", saved.videoUrl)
     }
+
+    @Test
+    fun editSaveKeepsExistingIdMusclesAndVideoUrl() = runTest {
+        val id = UUID.randomUUID()
+        val existing = Exercise(
+            id = id,
+            name = "RDL",
+            description = "Hinge",
+            allowWeight = true,
+            equipment = Equipment.BARBELL,
+            muscleGroups = listOf(MuscleGroup.HAMSTRINGS, MuscleGroup.GLUTES),
+            difficulty = DifficultyLevel.INTERMEDIATE,
+            isCompound = true,
+            videoUrl = "https://youtube.com/watch?v=rdl",
+            updatedAtEpochMs = 42L,
+        )
+        val repository = FakeExerciseRepository(existing = mapOf(id to existing))
+        val viewModel = createViewModel(repository, exerciseId = id.toString())
+        viewModel.updateName("Romanian deadlift")
+
+        viewModel.save()
+
+        val saved = repository.saved.single()
+        assertEquals(id, saved.id)
+        assertEquals("Romanian deadlift", saved.name)
+        assertEquals(listOf(MuscleGroup.HAMSTRINGS, MuscleGroup.GLUTES), saved.muscleGroups)
+        assertEquals("https://youtube.com/watch?v=rdl", saved.videoUrl)
+        assertEquals(42L, saved.updatedAtEpochMs)
+    }
+
+    @Test
+    fun malformedEditIdIsNotFound() {
+        val viewModel = createViewModel(exerciseId = "not-a-uuid")
+
+        assertEquals(NewExerciseError.NotFound, viewModel.viewState.value.error)
+        assertEquals(false, viewModel.viewState.value.isLoading)
+    }
 }
+
+private fun createViewModel(
+    repository: FakeExerciseRepository = FakeExerciseRepository(),
+    exerciseId: String = "",
+) = NewExerciseViewModel(
+    SavedStateHandle(mapOf("exerciseId" to exerciseId)),
+    repository,
+)
 
 private fun NewExerciseViewModel.fillRequiredFields() {
     updateName("Squat")
@@ -114,14 +160,19 @@ private fun NewExerciseViewModel.fillRequiredFields() {
     updateExerciseType(ExerciseType.COMPOUND)
 }
 
-private class FakeExerciseRepository : ExerciseRepository {
+private class FakeExerciseRepository(
+    private val existing: Map<UUID, Exercise> = emptyMap(),
+) : ExerciseRepository {
     val saved = mutableListOf<Exercise>()
 
     override fun observeAll(): Flow<List<Exercise>> = emptyFlow()
 
     override fun observePendingCount(): Flow<Int> = emptyFlow()
 
-    override suspend fun getById(id: UUID): Result<Exercise?> = Result.success(null)
+    override fun observeById(id: UUID): Flow<Exercise?> = emptyFlow()
+
+    override suspend fun getById(id: UUID): Result<Exercise?> =
+        Result.success(existing[id])
 
     override suspend fun save(exercise: Exercise): Result<Unit> {
         saved += exercise

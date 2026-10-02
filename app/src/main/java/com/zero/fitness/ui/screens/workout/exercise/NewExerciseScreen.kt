@@ -101,8 +101,20 @@ private fun NewExerciseScreenContent(
     Scaffold(
         topBar = {
             AppBar(
-                title = stringResource(R.string.new_exercise_app_bar_title),
-                subtitle = stringResource(R.string.new_exercise_app_bar_subtitle),
+                title = stringResource(
+                    if (state.isEdit) {
+                        R.string.new_exercise_app_bar_title_edit
+                    } else {
+                        R.string.new_exercise_app_bar_title
+                    },
+                ),
+                subtitle = stringResource(
+                    if (state.isEdit) {
+                        R.string.new_exercise_app_bar_subtitle_edit
+                    } else {
+                        R.string.new_exercise_app_bar_subtitle
+                    },
+                ),
                 onBackClick = onNavigateUp,
             )
         },
@@ -126,7 +138,7 @@ private fun NewExerciseScreenContent(
                         .padding(top = 14.dp, bottom = 12.dp),
                     label = stringResource(R.string.new_exercise_save),
                     colors = AppButtonDefaults.buttonColors(),
-                    isEnabled = !state.isSaving,
+                    isEnabled = !state.isSaving && !state.isLoading,
                     onClickAction = onSave,
                 )
             }
@@ -358,6 +370,7 @@ private fun newExerciseErrorText(error: NewExerciseError): String = when (error)
     NewExerciseError.EquipmentRequired -> stringResource(R.string.new_exercise_error_equipment_required)
     NewExerciseError.TypeRequired -> stringResource(R.string.new_exercise_error_type_required)
     NewExerciseError.VideoUrlInvalid -> stringResource(R.string.new_exercise_error_video_url_invalid)
+    NewExerciseError.NotFound -> stringResource(R.string.new_exercise_error_not_found)
     NewExerciseError.Storage -> stringResource(R.string.new_exercise_error_storage)
     NewExerciseError.Unknown -> stringResource(R.string.new_exercise_error_unknown)
 }
