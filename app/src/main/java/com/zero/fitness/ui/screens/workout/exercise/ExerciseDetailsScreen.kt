@@ -62,6 +62,7 @@ import com.zero.fitness.ui.theme.TextPrimary
 import com.zero.fitness.ui.theme.White
 import com.zero.fitness.ui.theme.Yellow
 import com.zero.fitness.ui.theme.ZeroFitnessTheme
+import java.util.Locale
 import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -154,7 +155,7 @@ private fun ExerciseDetailsBody(
     state: ExerciseDetailsScreenState,
     modifier: Modifier = Modifier,
 ) {
-    val locale = LocalConfiguration.current.locales[0]
+    val locale = LocalConfiguration.current.locales[0] ?: Locale.getDefault()
     val displayName = localizedName(state.name, state.nameSr, locale)
     val displayDescription = localizedDescription(
         state.description.ifBlank { null },
