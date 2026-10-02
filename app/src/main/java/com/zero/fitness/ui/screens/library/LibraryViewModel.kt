@@ -6,13 +6,13 @@ import com.zero.fitness.domain.model.Exercise
 import com.zero.fitness.domain.repository.ExerciseRepository
 import com.zero.fitness.domain.sync.SyncPolicy
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.util.UUID
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.UUID
+import javax.inject.Inject
 
 @HiltViewModel
 class LibraryViewModel @Inject constructor(
@@ -42,10 +42,6 @@ class LibraryViewModel @Inject constructor(
         SharingStarted.WhileSubscribed(5_000),
         LibraryScreenState(),
     )
-
-    init {
-        sync()
-    }
 
     fun sync() {
         if (isSyncing.value) return

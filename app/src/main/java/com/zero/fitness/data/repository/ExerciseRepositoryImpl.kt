@@ -15,8 +15,6 @@ import com.zero.fitness.domain.repository.ExerciseRepository
 import com.zero.fitness.domain.sync.SyncPolicy
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,8 +25,6 @@ class ExerciseRepositoryImpl @Inject constructor(
     private val remote: ExerciseRemoteDataSource,
     private val syncPolicy: SyncPolicy,
 ) : ExerciseRepository {
-
-    private val syncMutex = Mutex()
 
     override fun observeAll(): Flow<List<Exercise>> =
         dao.observeAll().map { entities -> entities.mapNotNull { it.toDomain() } }
@@ -58,14 +54,12 @@ class ExerciseRepositoryImpl @Inject constructor(
         if (!syncPolicy.canSync()) {
             return Result.success(SyncReport(0, 0, 0, skipped = true))
         }
-        return syncMutex.withLock {
-            safeCall {
-                val (pushed, failed) = pushPending()
-                val dtos = safeCall { remote.fetchAll() }.getOrElse { error ->
-                    return Result.failure(error)
-                }
-                SyncReport(pushed, failed, applyPull(dtos))
+        return safeCall {
+            val (pushed, failed) = pushPending()
+            val dtos = safeCall { remote.fetchAll() }.getOrElse { error ->
+                return Result.failure(error)
             }
+            SyncReport(pushed, failed, applyPull(dtos))
         }
     }
 
