@@ -13,7 +13,7 @@ create table if not exists public.exercises (
   allow_weight boolean not null default true,
   equipment text,
   muscle_groups_csv text, -- e.g. "chest,triceps"
-  difficulty text check (difficulty is null or difficulty in ('BEGINNER', 'INTERMEDIATE', 'ADVANCED')),
+  difficulty text check (difficulty is null or difficulty in ('BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'ELITE')),
   is_compound boolean not null default true,
   video_url text,
   created_at_epoch_ms bigint not null default (extract(epoch from now()) * 1000)::bigint,

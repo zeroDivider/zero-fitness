@@ -7,13 +7,18 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -67,7 +72,17 @@ fun Bubble(
     isSelected: Boolean = false,
     colors: BubblesDefaults.BubbleColors = BubblesDefaults.bubbleColors(),
     sizes: BubblesDefaults.BubbleSizes = BubblesDefaults.bubbleSize(),
-) = InteractiveBubble(modifier, label, isSelected, colors, sizes) { /* keep empty */ }
+    style: TextStyle = LocalTextStyle.current,
+    maxLines: Int = Int.MAX_VALUE,
+) = InteractiveBubble(
+    modifier = modifier,
+    label = label,
+    isSelected = isSelected,
+    colors = colors,
+    sizes = sizes,
+    style = style,
+    maxLines = maxLines,
+) { /* keep empty */ }
 
 @Composable
 fun InteractiveBubble(
@@ -76,6 +91,8 @@ fun InteractiveBubble(
     isSelected: Boolean = false,
     colors: BubblesDefaults.BubbleColors = BubblesDefaults.bubbleColors(),
     sizes: BubblesDefaults.BubbleSizes = BubblesDefaults.bubbleSize(),
+    style: TextStyle = LocalTextStyle.current,
+    maxLines: Int = Int.MAX_VALUE,
     onClickAction: () -> Unit,
 ) {
     val shape = RoundedCornerShape(sizes.borderRadius)
@@ -99,10 +116,15 @@ fun InteractiveBubble(
                 shape = shape,
             )
             .padding(horizontal = sizes.horizontalPadding, vertical = sizes.verticalPadding),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = label,
             color = if (isSelected) colors.labelSelected else colors.label,
+            style = style,
+            textAlign = TextAlign.Center,
+            maxLines = maxLines,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }

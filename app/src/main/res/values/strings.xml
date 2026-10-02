@@ -22,6 +22,25 @@
     <string name="exercise_type_compound">Compound</string>
     <string name="exercise_type_isolation">Isolation</string>
 
+    <!-- Common: muscle group -->
+    <string name="muscle_group_chest">Chest</string>
+    <string name="muscle_group_back">Back</string>
+    <string name="muscle_group_shoulders">Shoulders</string>
+    <string name="muscle_group_biceps">Biceps</string>
+    <string name="muscle_group_triceps">Triceps</string>
+    <string name="muscle_group_core">Core</string>
+    <string name="muscle_group_quads">Quads</string>
+    <string name="muscle_group_hamstrings">Hamstrings</string>
+    <string name="muscle_group_glutes">Glutes</string>
+    <string name="muscle_group_calves">Calves</string>
+    <string name="muscle_group_lower_back">Lower Back</string>
+
+    <!-- Common: difficulty -->
+    <string name="difficulty_beginner">Beginner</string>
+    <string name="difficulty_intermediate">Intermediate</string>
+    <string name="difficulty_advanced">Advanced</string>
+    <string name="difficulty_elite">Elite</string>
+
     <!-- Screen: New exercise -->
     <string name="new_exercise_app_bar_title">New exercise</string>
     <string name="new_exercise_app_bar_subtitle">Name the movement and how you want to track it</string>
@@ -41,6 +60,11 @@
     <string name="new_exercise_hint_description_sr">Enter Serbian description</string>
     <string name="new_exercise_label_equipment">Equipment</string>
     <string name="new_exercise_label_exercise_type">Exercise Type</string>
+    <string name="new_exercise_label_muscle_groups">Primary Muscle Groups</string>
+    <string name="new_exercise_label_difficulty">Difficulty Level</string>
+    <string name="new_exercise_label_video_url">Video URL (optional)</string>
+    <string name="new_exercise_hint_video_url">https://youtube.com/\u2026</string>
+    <string name="new_exercise_error_video_url_invalid">Enter a valid link</string>
 
     <!-- Screen: Library -->
     <string name="library_app_bar_title">Library screen</string>
