@@ -11,13 +11,13 @@ data object LibraryDestination
 
 fun NavGraphBuilder.libraryScreen(
     onNavigateUp: () -> Unit,
-    onNavigateToNewExercise: () -> Unit,
+    onNavigateToCreateExercise: () -> Unit,
     onNavigateToExerciseDetails: (UUID) -> Unit,
 ) {
     composable<LibraryDestination> {
         LibraryScreen(
             onNavigateUp = onNavigateUp,
-            onNavigateToNewExercise = onNavigateToNewExercise,
+            onNavigateToCreateExercise = onNavigateToCreateExercise,
             onNavigateToExerciseDetails = onNavigateToExerciseDetails,
         )
     }

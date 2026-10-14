@@ -25,7 +25,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
-class NewExerciseViewModelTest {
+class ExerciseEditorViewModelTest {
 
     @Before
     fun setUp() {
@@ -73,7 +73,7 @@ class NewExerciseViewModelTest {
 
         viewModel.save()
 
-        assertEquals(NewExerciseError.VideoUrlInvalid, viewModel.viewState.value.error)
+        assertEquals(ExerciseEditorError.VideoUrlInvalid, viewModel.viewState.value.error)
         assertTrue(repository.saved.isEmpty())
     }
 
@@ -141,20 +141,20 @@ class NewExerciseViewModelTest {
     fun malformedEditIdIsNotFound() {
         val viewModel = createViewModel(exerciseId = "not-a-uuid")
 
-        assertEquals(NewExerciseError.NotFound, viewModel.viewState.value.error)
+        assertEquals(ExerciseEditorError.NotFound, viewModel.viewState.value.error)
         assertEquals(false, viewModel.viewState.value.isLoading)
     }
 }
 
 private fun createViewModel(
     repository: FakeExerciseRepository = FakeExerciseRepository(),
-    exerciseId: String = "",
-) = NewExerciseViewModel(
+    exerciseId: String? = null,
+) = ExerciseEditorViewModel(
     SavedStateHandle(mapOf("exerciseId" to exerciseId)),
     repository,
 )
 
-private fun NewExerciseViewModel.fillRequiredFields() {
+private fun ExerciseEditorViewModel.fillRequiredFields() {
     updateName("Squat")
     updateEquipment(Equipment.BARBELL)
     updateExerciseType(ExerciseType.COMPOUND)

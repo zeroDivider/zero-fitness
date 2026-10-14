@@ -30,7 +30,7 @@ import com.zero.fitness.ui.theme.TextPrimary
 import com.zero.fitness.ui.theme.White
 import com.zero.fitness.ui.theme.ZeroFitnessTheme
 
-object NewExerciseTrackWeightDefaults {
+object TrackWeightToggleDefaults {
     @Immutable
     data class SettingCardColors(
         val background: Color,
@@ -73,17 +73,17 @@ object NewExerciseTrackWeightDefaults {
 }
 
 @Composable
-private fun NewExerciseToggleSettingCard(
+private fun ToggleSettingCard(
     title: String,
     subtitle: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    cardColors: NewExerciseTrackWeightDefaults.SettingCardColors =
-        NewExerciseTrackWeightDefaults.settingCardColors(),
-    cardSizes: NewExerciseTrackWeightDefaults.SettingCardSizes =
-        NewExerciseTrackWeightDefaults.settingCardSizes(),
+    cardColors: TrackWeightToggleDefaults.SettingCardColors =
+        TrackWeightToggleDefaults.settingCardColors(),
+    cardSizes: TrackWeightToggleDefaults.SettingCardSizes =
+        TrackWeightToggleDefaults.settingCardSizes(),
     toggleColors: SwitchColors = AppToggleDefaults.colors(),
 ) {
     val cardShape = RoundedCornerShape(cardSizes.cornerRadius)
@@ -135,13 +135,13 @@ fun TrackWeightToggleSettingCard(
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    cardColors: NewExerciseTrackWeightDefaults.SettingCardColors =
-        NewExerciseTrackWeightDefaults.settingCardColors(),
-    cardSizes: NewExerciseTrackWeightDefaults.SettingCardSizes =
-        NewExerciseTrackWeightDefaults.settingCardSizes(),
+    cardColors: TrackWeightToggleDefaults.SettingCardColors =
+        TrackWeightToggleDefaults.settingCardColors(),
+    cardSizes: TrackWeightToggleDefaults.SettingCardSizes =
+        TrackWeightToggleDefaults.settingCardSizes(),
     toggleColors: SwitchColors = AppToggleDefaults.colors(),
 ) {
-    NewExerciseToggleSettingCard(
+    ToggleSettingCard(
         title = stringResource(R.string.exercise_track_weight_title),
         subtitle = stringResource(R.string.exercise_track_weight_subtitle),
         checked = checked,

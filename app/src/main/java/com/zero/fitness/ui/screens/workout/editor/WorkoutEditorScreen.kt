@@ -1,4 +1,4 @@
-package com.zero.fitness.ui.screens.workout.new
+package com.zero.fitness.ui.screens.workout.editor
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -24,8 +24,8 @@ import com.zero.fitness.ui.theme.Yellow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewWorkoutScreen(
-    onNavigateToNewExercise: () -> Unit,
+fun WorkoutEditorScreen(
+    onNavigateToCreateExercise: () -> Unit,
     onNavigateUp: () -> Unit,
 ) {
     Scaffold(
@@ -57,7 +57,7 @@ fun NewWorkoutScreen(
                         background = Yellow,
                         label = DarkPurple,
                     ),
-                    onClickAction = onNavigateToNewExercise,
+                    onClickAction = onNavigateToCreateExercise,
                 )
                 AppButton(
                     modifier = Modifier.fillMaxWidth(),
@@ -72,5 +72,5 @@ fun NewWorkoutScreen(
 @Preview
 @Composable
 private fun Preview() {
-    NewWorkoutScreen({}) {}
+    WorkoutEditorScreen({}) {}
 }
