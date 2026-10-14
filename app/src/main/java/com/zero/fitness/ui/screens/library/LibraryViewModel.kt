@@ -64,4 +64,7 @@ data class LibraryScreenState(
     val syncEnabled: Boolean = false,
     val isSyncing: Boolean = false,
     val syncFailed: Boolean = false,
-)
+) {
+    val showSyncAction: Boolean
+        get() = syncEnabled && (pendingCount > 0 || isSyncing || syncFailed)
+}

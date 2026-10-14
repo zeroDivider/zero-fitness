@@ -6,8 +6,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -18,16 +24,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zero.fitness.R
+import com.zero.fitness.domain.model.Equipment
 import com.zero.fitness.domain.model.Exercise
 import com.zero.fitness.ui.resources.labelRes
 import com.zero.fitness.ui.screens.common.AppBar
 import com.zero.fitness.ui.screens.common.AppButton
 import com.zero.fitness.ui.screens.common.AppButtonDefaults
+import com.zero.fitness.ui.theme.White
+import com.zero.fitness.ui.theme.ZeroFitnessTheme
 import java.util.UUID
 
 @Composable
@@ -39,12 +50,38 @@ fun LibraryScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
+    LibraryScreenContent(
+        state = state,
+        onNavigateUp = onNavigateUp,
+        onNavigateToCreateExercise = onNavigateToCreateExercise,
+        onNavigateToExerciseDetails = onNavigateToExerciseDetails,
+        onSync = viewModel::sync,
+    )
+}
+
+@Composable
+private fun LibraryScreenContent(
+    state: LibraryScreenState,
+    onNavigateUp: () -> Unit,
+    onNavigateToCreateExercise: () -> Unit,
+    onNavigateToExerciseDetails: (UUID) -> Unit,
+    onSync: () -> Unit,
+) {
     Scaffold(
         topBar = {
             AppBar(
                 title = stringResource(R.string.library_app_bar_title),
                 subtitle = stringResource(R.string.library_app_bar_subtitle),
-                onBackClick = { onNavigateUp() },
+                onBackClick = onNavigateUp,
+                actionButton = {
+                    if (state.showSyncAction) {
+                        LibrarySyncAction(
+                            isSyncing = state.isSyncing,
+                            syncFailed = state.syncFailed,
+                            onSync = onSync,
+                        )
+                    }
+                },
             )
         }
     ) { padding ->
@@ -56,12 +93,6 @@ fun LibraryScreen(
                     .fillMaxSize()
                     .padding(horizontal = 18.dp)
             ) {
-                if (state.syncEnabled) {
-                    LibrarySyncStatus(
-                        state = state,
-                        onSync = viewModel::sync,
-                    )
-                }
                 if (state.exercises.isEmpty()) {
                     Box(
                         modifier = Modifier
@@ -87,7 +118,7 @@ fun LibraryScreen(
                     modifier = Modifier.fillMaxWidth(),
                     label = stringResource(R.string.library_add_exercise),
                     colors = AppButtonDefaults.buttonColors(),
-                    onClickAction = { onNavigateToCreateExercise() }
+                    onClickAction = onNavigateToCreateExercise,
                 )
             }
         }
@@ -95,27 +126,40 @@ fun LibraryScreen(
 }
 
 @Composable
-private fun LibrarySyncStatus(
-    state: LibraryScreenState,
+private fun LibrarySyncAction(
+    isSyncing: Boolean,
+    syncFailed: Boolean,
     onSync: () -> Unit,
 ) {
-    when {
-        state.isSyncing -> Text(
-            text = stringResource(R.string.library_syncing),
-            modifier = Modifier.padding(vertical = 8.dp),
-        )
-        state.syncFailed -> Text(
-            text = stringResource(R.string.library_sync_failed),
-            modifier = Modifier
-                .clickable(onClick = onSync)
-                .padding(vertical = 8.dp),
-        )
-        state.pendingCount > 0 -> Text(
-            text = stringResource(R.string.library_pending_count, state.pendingCount),
-            modifier = Modifier
-                .clickable(onClick = onSync)
-                .padding(vertical = 8.dp),
-        )
+    val contentDescription = stringResource(
+        when {
+            isSyncing -> R.string.library_sync_syncing
+            syncFailed -> R.string.library_sync_failed_action
+            else -> R.string.library_sync_action
+        },
+    )
+    IconButton(
+        onClick = onSync,
+        enabled = !isSyncing,
+        modifier = Modifier.semantics { this.contentDescription = contentDescription },
+    ) {
+        if (isSyncing) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(22.dp),
+                color = White,
+                strokeWidth = 2.dp,
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Default.Refresh,
+                contentDescription = null,
+                tint = if (syncFailed) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    White
+                },
+            )
+        }
     }
 }
 
@@ -147,5 +191,41 @@ private fun LibraryExerciseRow(
 @Composable
 @Preview
 private fun Preview() {
-    LibraryScreen({}, {}, {})
+    ZeroFitnessTheme(dynamicColor = false) {
+        LibraryScreenContent(
+            state = LibraryScreenState(
+                exercises = listOf(
+                    Exercise(
+                        id = UUID.randomUUID(),
+                        name = "Bench Press",
+                        equipment = Equipment.BARBELL,
+                        updatedAtEpochMs = 0L,
+                    ),
+                ),
+                pendingCount = 1,
+                syncEnabled = true,
+            ),
+            onNavigateUp = {},
+            onNavigateToCreateExercise = {},
+            onNavigateToExerciseDetails = {},
+            onSync = {},
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewEmptySyncing() {
+    ZeroFitnessTheme(dynamicColor = false) {
+        LibraryScreenContent(
+            state = LibraryScreenState(
+                syncEnabled = true,
+                isSyncing = true,
+            ),
+            onNavigateUp = {},
+            onNavigateToCreateExercise = {},
+            onNavigateToExerciseDetails = {},
+            onSync = {},
+        )
+    }
 }
