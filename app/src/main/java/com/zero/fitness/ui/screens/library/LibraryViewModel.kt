@@ -3,6 +3,7 @@ package com.zero.fitness.ui.screens.library
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zero.fitness.domain.model.Exercise
+import com.zero.fitness.domain.model.MuscleGroup
 import com.zero.fitness.domain.repository.ExerciseRepository
 import com.zero.fitness.domain.sync.SyncPolicy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,26 +23,50 @@ class LibraryViewModel @Inject constructor(
 
     private val isSyncing = MutableStateFlow(false)
     private val syncFailed = MutableStateFlow(false)
+    private val selectedMuscleGroup = MutableStateFlow<MuscleGroup?>(null)
 
-    val state = combine(
+    private val catalog = combine(
         exerciseRepository.observeAll(),
         exerciseRepository.observePendingCount(),
         syncPolicy.observeCanSync(),
         isSyncing,
         syncFailed,
     ) { exercises, pendingCount, syncEnabled, syncing, failed ->
-        LibraryScreenState(
+        LibraryCatalog(
             exercises = exercises,
             pendingCount = pendingCount,
             syncEnabled = syncEnabled,
             isSyncing = syncing,
             syncFailed = failed,
         )
+    }
+
+    val state = combine(
+        catalog,
+        selectedMuscleGroup,
+    ) { catalog, selectedGroup ->
+        val availableMuscleGroups = catalog.exercises.availableMuscleGroups()
+        val effectiveGroup = selectedGroup.takeIf { it in availableMuscleGroups }
+        LibraryScreenState(
+            exercises = catalog.exercises.filter { exercise ->
+                effectiveGroup == null || effectiveGroup in exercise.muscleGroups
+            },
+            pendingCount = catalog.pendingCount,
+            syncEnabled = catalog.syncEnabled,
+            isSyncing = catalog.isSyncing,
+            syncFailed = catalog.syncFailed,
+            selectedMuscleGroup = effectiveGroup,
+            availableMuscleGroups = availableMuscleGroups,
+        )
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5_000),
         LibraryScreenState(),
     )
+
+    fun setMuscleFilter(group: MuscleGroup?) {
+        selectedMuscleGroup.value = group
+    }
 
     fun sync() {
         if (isSyncing.value) return
@@ -64,7 +89,20 @@ data class LibraryScreenState(
     val syncEnabled: Boolean = false,
     val isSyncing: Boolean = false,
     val syncFailed: Boolean = false,
+    val selectedMuscleGroup: MuscleGroup? = null,
+    val availableMuscleGroups: List<MuscleGroup> = emptyList(),
 ) {
     val showSyncAction: Boolean
         get() = syncEnabled && (pendingCount > 0 || isSyncing || syncFailed)
 }
+
+private data class LibraryCatalog(
+    val exercises: List<Exercise>,
+    val pendingCount: Int,
+    val syncEnabled: Boolean,
+    val isSyncing: Boolean,
+    val syncFailed: Boolean,
+)
+
+private fun List<Exercise>.availableMuscleGroups(): List<MuscleGroup> =
+    MuscleGroup.entries.filter { group -> any { group in it.muscleGroups } }
