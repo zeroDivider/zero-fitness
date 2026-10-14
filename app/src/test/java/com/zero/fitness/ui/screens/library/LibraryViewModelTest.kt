@@ -2,6 +2,7 @@
 package com.zero.fitness.ui.screens.library
 
 import com.zero.fitness.domain.model.Exercise
+import com.zero.fitness.domain.model.MuscleGroup
 import com.zero.fitness.domain.model.SyncReport
 import com.zero.fitness.domain.repository.ExerciseRepository
 import com.zero.fitness.domain.sync.SyncPolicy
@@ -200,15 +201,90 @@ class LibraryViewModelTest {
         )
     }
 
+    @Test
+    fun availableMuscleGroupsListsOnlyGroupsPresentOnExercises() {
+        runTest {
+            val bench = exercise("Bench Press", muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS))
+            val squat = exercise("Squat", muscleGroups = listOf(MuscleGroup.QUADS))
+            val viewModel = LibraryViewModel(
+                FakeExerciseRepository(exercises = listOf(bench, squat)),
+                FakeSyncPolicy(),
+            )
+            collectState(viewModel)
+
+            assertEquals(
+                listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS, MuscleGroup.QUADS),
+                viewModel.state.value.availableMuscleGroups,
+            )
+        }
+    }
+
+    @Test
+    fun muscleFilterKeepsExercisesThatContainTheSelectedGroup() {
+        runTest {
+            val bench = exercise("Bench Press", muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS))
+            val squat = exercise("Squat", muscleGroups = listOf(MuscleGroup.QUADS))
+            val viewModel = LibraryViewModel(
+                FakeExerciseRepository(exercises = listOf(bench, squat)),
+                FakeSyncPolicy(),
+            )
+            collectState(viewModel)
+
+            viewModel.setMuscleFilter(MuscleGroup.CHEST)
+
+            assertEquals(listOf(bench), viewModel.state.value.exercises)
+            assertEquals(MuscleGroup.CHEST, viewModel.state.value.selectedMuscleGroup)
+        }
+    }
+
+    @Test
+    fun muscleFilterAllShowsEveryExercise() {
+        runTest {
+            val bench = exercise("Bench Press", muscleGroups = listOf(MuscleGroup.CHEST))
+            val squat = exercise("Squat", muscleGroups = listOf(MuscleGroup.QUADS))
+            val viewModel = LibraryViewModel(
+                FakeExerciseRepository(exercises = listOf(bench, squat)),
+                FakeSyncPolicy(),
+            )
+            collectState(viewModel)
+
+            viewModel.setMuscleFilter(MuscleGroup.CHEST)
+            viewModel.setMuscleFilter(null)
+
+            assertEquals(listOf(bench, squat), viewModel.state.value.exercises)
+            assertEquals(null, viewModel.state.value.selectedMuscleGroup)
+        }
+    }
+
+    @Test
+    fun muscleFilterResetsToAllWhenSelectedGroupDisappears() {
+        runTest {
+            val bench = exercise("Bench Press", muscleGroups = listOf(MuscleGroup.CHEST))
+            val repository = FakeExerciseRepository(exercises = listOf(bench))
+            val viewModel = LibraryViewModel(repository, FakeSyncPolicy())
+            collectState(viewModel)
+
+            viewModel.setMuscleFilter(MuscleGroup.CHEST)
+            repository.exercises.value = emptyList()
+
+            assertEquals(null, viewModel.state.value.selectedMuscleGroup)
+            assertEquals(emptyList<MuscleGroup>(), viewModel.state.value.availableMuscleGroups)
+        }
+    }
+
     fun TestScope.collectState(viewModel: LibraryViewModel) {
         backgroundScope.launch(UnconfinedTestDispatcher()) {
             viewModel.state.collect {}
         }
     }
 
-    fun exercise(name: String) = Exercise(
+    fun exercise(
+        name: String,
+        muscleGroups: List<MuscleGroup> = emptyList(),
+    ) = Exercise(
         id = UUID.randomUUID(),
         name = name,
+        muscleGroups = muscleGroups,
         updatedAtEpochMs = 0L,
     )
 }

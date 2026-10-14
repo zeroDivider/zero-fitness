@@ -1,14 +1,18 @@
 package com.zero.fitness.ui.screens.library
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,10 +37,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zero.fitness.R
 import com.zero.fitness.domain.model.Equipment
 import com.zero.fitness.domain.model.Exercise
+import com.zero.fitness.domain.model.MuscleGroup
 import com.zero.fitness.ui.resources.labelRes
 import com.zero.fitness.ui.screens.common.AppBar
 import com.zero.fitness.ui.screens.common.AppButton
 import com.zero.fitness.ui.screens.common.AppButtonDefaults
+import com.zero.fitness.ui.screens.common.InteractiveBubble
 import com.zero.fitness.ui.theme.White
 import com.zero.fitness.ui.theme.ZeroFitnessTheme
 import java.util.UUID
@@ -55,6 +61,7 @@ fun LibraryScreen(
         onNavigateUp = onNavigateUp,
         onNavigateToCreateExercise = onNavigateToCreateExercise,
         onNavigateToExerciseDetails = onNavigateToExerciseDetails,
+        onMuscleFilterChange = viewModel::setMuscleFilter,
         onSync = viewModel::sync,
     )
 }
@@ -65,6 +72,7 @@ private fun LibraryScreenContent(
     onNavigateUp: () -> Unit,
     onNavigateToCreateExercise: () -> Unit,
     onNavigateToExerciseDetails: (UUID) -> Unit,
+    onMuscleFilterChange: (MuscleGroup?) -> Unit,
     onSync: () -> Unit,
 ) {
     Scaffold(
@@ -93,6 +101,11 @@ private fun LibraryScreenContent(
                     .fillMaxSize()
                     .padding(horizontal = 18.dp)
             ) {
+                LibraryMuscleFilterRow(
+                    selectedMuscleGroup = state.selectedMuscleGroup,
+                    availableMuscleGroups = state.availableMuscleGroups,
+                    onMuscleFilterChange = onMuscleFilterChange,
+                )
                 if (state.exercises.isEmpty()) {
                     Box(
                         modifier = Modifier
@@ -164,6 +177,37 @@ private fun LibrarySyncAction(
 }
 
 @Composable
+private fun LibraryMuscleFilterRow(
+    selectedMuscleGroup: MuscleGroup?,
+    availableMuscleGroups: List<MuscleGroup>,
+    onMuscleFilterChange: (MuscleGroup?) -> Unit,
+) {
+    if (availableMuscleGroups.isEmpty()) return
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState())
+            .padding(top = 12.dp, bottom = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        InteractiveBubble(
+            label = stringResource(R.string.library_filter_all),
+            isSelected = selectedMuscleGroup == null,
+            onClickAction = { onMuscleFilterChange(null) },
+        )
+        availableMuscleGroups.forEach { group ->
+            InteractiveBubble(
+                label = stringResource(group.labelRes()),
+                isSelected = group == selectedMuscleGroup,
+                onClickAction = { onMuscleFilterChange(group) },
+            )
+        }
+    }
+}
+
+@Composable
 private fun LibraryExerciseRow(
     exercise: Exercise,
     onClick: () -> Unit,
@@ -199,15 +243,30 @@ private fun Preview() {
                         id = UUID.randomUUID(),
                         name = "Bench Press",
                         equipment = Equipment.BARBELL,
+                        muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS),
+                        updatedAtEpochMs = 0L,
+                    ),
+                    Exercise(
+                        id = UUID.randomUUID(),
+                        name = "Pull-up",
+                        equipment = Equipment.BODYWEIGHT,
+                        muscleGroups = listOf(MuscleGroup.LATS, MuscleGroup.BICEPS),
                         updatedAtEpochMs = 0L,
                     ),
                 ),
                 pendingCount = 1,
                 syncEnabled = true,
+                availableMuscleGroups = listOf(
+                    MuscleGroup.CHEST,
+                    MuscleGroup.TRICEPS,
+                    MuscleGroup.LATS,
+                    MuscleGroup.BICEPS,
+                ),
             ),
             onNavigateUp = {},
             onNavigateToCreateExercise = {},
             onNavigateToExerciseDetails = {},
+            onMuscleFilterChange = {},
             onSync = {},
         )
     }
@@ -225,6 +284,7 @@ private fun PreviewEmptySyncing() {
             onNavigateUp = {},
             onNavigateToCreateExercise = {},
             onNavigateToExerciseDetails = {},
+            onMuscleFilterChange = {},
             onSync = {},
         )
     }
