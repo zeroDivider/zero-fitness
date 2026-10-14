@@ -49,9 +49,10 @@ class LibraryViewModel @Inject constructor(
     ) { catalog, selectedGroup, query ->
         val availableMuscleGroups = catalog.exercises.availableMuscleGroups()
         val effectiveGroup = selectedGroup.takeIf { it in availableMuscleGroups }
+        val groupForList = effectiveGroup.takeIf { query.isBlank() }
         LibraryScreenState(
             exercises = catalog.exercises.filter { exercise ->
-                exercise.matchesLibraryFilters(effectiveGroup, query)
+                exercise.matchesLibraryFilters(groupForList, query)
             },
             pendingCount = catalog.pendingCount,
             syncEnabled = catalog.syncEnabled,
@@ -102,6 +103,9 @@ data class LibraryScreenState(
 ) {
     val showSyncAction: Boolean
         get() = syncEnabled && (pendingCount > 0 || isSyncing || syncFailed)
+
+    val showMuscleFilter: Boolean
+        get() = searchQuery.isBlank() && availableMuscleGroups.isNotEmpty()
 }
 
 private data class LibraryCatalog(

@@ -120,11 +120,13 @@ private fun LibraryScreenContent(
                     query = state.searchQuery,
                     onQueryChange = onSearchQueryChange,
                 )
-                LibraryMuscleFilterRow(
-                    selectedMuscleGroup = state.selectedMuscleGroup,
-                    availableMuscleGroups = state.availableMuscleGroups,
-                    onMuscleFilterChange = onMuscleFilterChange,
-                )
+                if (state.showMuscleFilter) {
+                    LibraryMuscleFilterRow(
+                        selectedMuscleGroup = state.selectedMuscleGroup,
+                        availableMuscleGroups = state.availableMuscleGroups,
+                        onMuscleFilterChange = onMuscleFilterChange,
+                    )
+                }
                 if (state.exercises.isEmpty()) {
                     Box(
                         modifier = Modifier
@@ -233,8 +235,6 @@ private fun LibraryMuscleFilterRow(
     availableMuscleGroups: List<MuscleGroup>,
     onMuscleFilterChange: (MuscleGroup?) -> Unit,
 ) {
-    if (availableMuscleGroups.isEmpty()) return
-
     Row(
         modifier = Modifier
             .fillMaxWidth()

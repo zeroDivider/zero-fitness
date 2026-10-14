@@ -308,34 +308,54 @@ class LibraryViewModelTest {
     }
 
     @Test
-    fun searchAndMuscleFilterApplyTogether() {
+    fun searchIgnoresMuscleFilterAndHidesIt() {
         runTest {
-            val incline = exercise(
-                "Incline Bench",
+            val benchPress = exercise(
+                "Bench Press",
                 muscleGroups = listOf(MuscleGroup.CHEST),
             )
-            val decline = exercise(
-                "Decline Bench",
-                muscleGroups = listOf(MuscleGroup.CHEST),
-            )
-            val row = exercise(
-                "Barbell Row",
+            val benchRow = exercise(
+                "Bench Row",
                 muscleGroups = listOf(MuscleGroup.LATS),
             )
             val viewModel = LibraryViewModel(
-                FakeExerciseRepository(exercises = listOf(incline, decline, row)),
+                FakeExerciseRepository(exercises = listOf(benchPress, benchRow)),
                 FakeSyncPolicy(),
             )
             collectState(viewModel)
 
             viewModel.setMuscleFilter(MuscleGroup.CHEST)
-            viewModel.setSearchQuery("incline")
+            viewModel.setSearchQuery("bench")
 
-            assertEquals(listOf(incline), viewModel.state.value.exercises)
-            assertEquals(
-                listOf(MuscleGroup.CHEST, MuscleGroup.LATS),
-                viewModel.state.value.availableMuscleGroups,
+            assertEquals(listOf(benchPress, benchRow), viewModel.state.value.exercises)
+            assertEquals(false, viewModel.state.value.showMuscleFilter)
+        }
+    }
+
+    @Test
+    fun clearingSearchRestoresSelectedMuscleFilter() {
+        runTest {
+            val benchPress = exercise(
+                "Bench Press",
+                muscleGroups = listOf(MuscleGroup.CHEST),
             )
+            val benchRow = exercise(
+                "Bench Row",
+                muscleGroups = listOf(MuscleGroup.LATS),
+            )
+            val viewModel = LibraryViewModel(
+                FakeExerciseRepository(exercises = listOf(benchPress, benchRow)),
+                FakeSyncPolicy(),
+            )
+            collectState(viewModel)
+
+            viewModel.setMuscleFilter(MuscleGroup.CHEST)
+            viewModel.setSearchQuery("bench")
+            viewModel.setSearchQuery("")
+
+            assertEquals(listOf(benchPress), viewModel.state.value.exercises)
+            assertEquals(MuscleGroup.CHEST, viewModel.state.value.selectedMuscleGroup)
+            assertEquals(true, viewModel.state.value.showMuscleFilter)
         }
     }
 
