@@ -96,7 +96,7 @@
     <string name="library_app_bar_subtitle">Add exercises by your own pace...</string>
     <string name="library_add_exercise">+ Add New Exercise</string>
     <string name="library_empty">No exercises yet</string>
-    <string name="library_syncing">Syncing...</string>
-    <string name="library_sync_failed">Sync failed, tap to retry</string>
-    <string name="library_pending_count">%1$d not synced</string>
+    <string name="library_sync_action">Sync exercises</string>
+    <string name="library_sync_syncing">Syncing exercises</string>
+    <string name="library_sync_failed_action">Sync failed, tap to retry</string>
 </resources>

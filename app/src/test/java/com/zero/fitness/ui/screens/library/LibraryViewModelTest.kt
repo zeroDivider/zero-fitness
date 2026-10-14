@@ -176,6 +176,29 @@ class LibraryViewModelTest {
         }
     }
 
+    @Test
+    fun showSyncActionRequiresSyncEnabledAndPendingOrBusyOrFailed() {
+        assertEquals(
+            false,
+            LibraryScreenState(syncEnabled = true, pendingCount = 0).showSyncAction,
+        )
+        assertEquals(
+            false,
+            LibraryScreenState(syncEnabled = false, pendingCount = 2).showSyncAction,
+        )
+        assertEquals(
+            true,
+            LibraryScreenState(syncEnabled = true, pendingCount = 1).showSyncAction,
+        )
+        assertEquals(
+            true,
+            LibraryScreenState(syncEnabled = true, isSyncing = true).showSyncAction,
+        )
+        assertEquals(
+            true,
+            LibraryScreenState(syncEnabled = true, syncFailed = true).showSyncAction,
+        )
+    }
 
     fun TestScope.collectState(viewModel: LibraryViewModel) {
         backgroundScope.launch(UnconfinedTestDispatcher()) {
