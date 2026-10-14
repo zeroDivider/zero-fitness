@@ -24,6 +24,7 @@ class LibraryViewModel @Inject constructor(
     private val isSyncing = MutableStateFlow(false)
     private val syncFailed = MutableStateFlow(false)
     private val selectedMuscleGroup = MutableStateFlow<MuscleGroup?>(null)
+    private val searchQuery = MutableStateFlow("")
 
     private val catalog = combine(
         exerciseRepository.observeAll(),
@@ -44,12 +45,13 @@ class LibraryViewModel @Inject constructor(
     val state = combine(
         catalog,
         selectedMuscleGroup,
-    ) { catalog, selectedGroup ->
+        searchQuery,
+    ) { catalog, selectedGroup, query ->
         val availableMuscleGroups = catalog.exercises.availableMuscleGroups()
         val effectiveGroup = selectedGroup.takeIf { it in availableMuscleGroups }
         LibraryScreenState(
             exercises = catalog.exercises.filter { exercise ->
-                effectiveGroup == null || effectiveGroup in exercise.muscleGroups
+                exercise.matchesLibraryFilters(effectiveGroup, query)
             },
             pendingCount = catalog.pendingCount,
             syncEnabled = catalog.syncEnabled,
@@ -57,6 +59,7 @@ class LibraryViewModel @Inject constructor(
             syncFailed = catalog.syncFailed,
             selectedMuscleGroup = effectiveGroup,
             availableMuscleGroups = availableMuscleGroups,
+            searchQuery = query,
         )
     }.stateIn(
         viewModelScope,
@@ -66,6 +69,10 @@ class LibraryViewModel @Inject constructor(
 
     fun setMuscleFilter(group: MuscleGroup?) {
         selectedMuscleGroup.value = group
+    }
+
+    fun setSearchQuery(query: String) {
+        searchQuery.value = query
     }
 
     fun sync() {
@@ -91,6 +98,7 @@ data class LibraryScreenState(
     val syncFailed: Boolean = false,
     val selectedMuscleGroup: MuscleGroup? = null,
     val availableMuscleGroups: List<MuscleGroup> = emptyList(),
+    val searchQuery: String = "",
 ) {
     val showSyncAction: Boolean
         get() = syncEnabled && (pendingCount > 0 || isSyncing || syncFailed)
@@ -106,3 +114,15 @@ private data class LibraryCatalog(
 
 private fun List<Exercise>.availableMuscleGroups(): List<MuscleGroup> =
     MuscleGroup.entries.filter { group -> any { group in it.muscleGroups } }
+
+private fun Exercise.matchesLibraryFilters(
+    selectedMuscleGroup: MuscleGroup?,
+    query: String,
+): Boolean {
+    val matchesMuscle = selectedMuscleGroup == null || selectedMuscleGroup in muscleGroups
+    val trimmed = query.trim()
+    val matchesSearch = trimmed.isEmpty() ||
+        name.contains(trimmed, ignoreCase = true) ||
+        nameSr.orEmpty().contains(trimmed, ignoreCase = true)
+    return matchesMuscle && matchesSearch
+}

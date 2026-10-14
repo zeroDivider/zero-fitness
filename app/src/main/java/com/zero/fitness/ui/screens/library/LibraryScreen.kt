@@ -13,17 +13,24 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,6 +53,9 @@ import com.zero.fitness.ui.screens.common.InteractiveBubble
 import com.zero.fitness.ui.theme.White
 import com.zero.fitness.ui.theme.ZeroFitnessTheme
 import java.util.UUID
+import kotlinx.coroutines.delay
+
+private const val SEARCH_DEBOUNCE_MS = 250L
 
 @Composable
 fun LibraryScreen(
@@ -61,6 +71,7 @@ fun LibraryScreen(
         onNavigateUp = onNavigateUp,
         onNavigateToCreateExercise = onNavigateToCreateExercise,
         onNavigateToExerciseDetails = onNavigateToExerciseDetails,
+        onSearchQueryChange = viewModel::setSearchQuery,
         onMuscleFilterChange = viewModel::setMuscleFilter,
         onSync = viewModel::sync,
     )
@@ -72,6 +83,7 @@ private fun LibraryScreenContent(
     onNavigateUp: () -> Unit,
     onNavigateToCreateExercise: () -> Unit,
     onNavigateToExerciseDetails: (UUID) -> Unit,
+    onSearchQueryChange: (String) -> Unit,
     onMuscleFilterChange: (MuscleGroup?) -> Unit,
     onSync: () -> Unit,
 ) {
@@ -101,6 +113,10 @@ private fun LibraryScreenContent(
                     .fillMaxSize()
                     .padding(horizontal = 18.dp)
             ) {
+                LibrarySearchField(
+                    query = state.searchQuery,
+                    onQueryChange = onSearchQueryChange,
+                )
                 LibraryMuscleFilterRow(
                     selectedMuscleGroup = state.selectedMuscleGroup,
                     availableMuscleGroups = state.availableMuscleGroups,
@@ -177,6 +193,38 @@ private fun LibrarySyncAction(
 }
 
 @Composable
+private fun LibrarySearchField(
+    query: String,
+    onQueryChange: (String) -> Unit,
+) {
+    var draftQuery by remember { mutableStateOf(query) }
+    LaunchedEffect(draftQuery) {
+        delay(SEARCH_DEBOUNCE_MS)
+        if (draftQuery != query) onQueryChange(draftQuery)
+    }
+    LaunchedEffect(query) {
+        if (query != draftQuery) draftQuery = query
+    }
+
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 12.dp),
+        value = draftQuery,
+        onValueChange = { draftQuery = it },
+        singleLine = true,
+        shape = RoundedCornerShape(10.dp),
+        placeholder = { Text(stringResource(R.string.library_search_hint)) },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = stringResource(R.string.library_search_hint),
+            )
+        },
+    )
+}
+
+@Composable
 private fun LibraryMuscleFilterRow(
     selectedMuscleGroup: MuscleGroup?,
     availableMuscleGroups: List<MuscleGroup>,
@@ -242,6 +290,7 @@ private fun Preview() {
                     Exercise(
                         id = UUID.randomUUID(),
                         name = "Bench Press",
+                        nameSr = "Benč",
                         equipment = Equipment.BARBELL,
                         muscleGroups = listOf(MuscleGroup.CHEST, MuscleGroup.TRICEPS),
                         updatedAtEpochMs = 0L,
@@ -249,6 +298,7 @@ private fun Preview() {
                     Exercise(
                         id = UUID.randomUUID(),
                         name = "Pull-up",
+                        nameSr = "Zgib",
                         equipment = Equipment.BODYWEIGHT,
                         muscleGroups = listOf(MuscleGroup.LATS, MuscleGroup.BICEPS),
                         updatedAtEpochMs = 0L,
@@ -266,6 +316,7 @@ private fun Preview() {
             onNavigateUp = {},
             onNavigateToCreateExercise = {},
             onNavigateToExerciseDetails = {},
+            onSearchQueryChange = {},
             onMuscleFilterChange = {},
             onSync = {},
         )
@@ -284,6 +335,7 @@ private fun PreviewEmptySyncing() {
             onNavigateUp = {},
             onNavigateToCreateExercise = {},
             onNavigateToExerciseDetails = {},
+            onSearchQueryChange = {},
             onMuscleFilterChange = {},
             onSync = {},
         )
