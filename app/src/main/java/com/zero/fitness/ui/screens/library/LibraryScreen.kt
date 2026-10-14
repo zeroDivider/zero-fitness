@@ -1,5 +1,6 @@
 package com.zero.fitness.ui.screens.library
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
@@ -50,6 +52,7 @@ import com.zero.fitness.ui.screens.common.AppBar
 import com.zero.fitness.ui.screens.common.AppButton
 import com.zero.fitness.ui.screens.common.AppButtonDefaults
 import com.zero.fitness.ui.screens.common.InteractiveBubble
+import com.zero.fitness.ui.theme.Amber
 import com.zero.fitness.ui.theme.White
 import com.zero.fitness.ui.theme.ZeroFitnessTheme
 import java.util.UUID
@@ -266,10 +269,24 @@ private fun LibraryExerciseRow(
             .clickable(role = Role.Button, onClick = onClick)
             .padding(vertical = 8.dp),
     ) {
-        Text(
-            text = exercise.name,
-            style = MaterialTheme.typography.titleSmall,
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Text(
+                text = exercise.name,
+                style = MaterialTheme.typography.titleSmall,
+            )
+            if (exercise.syncPending) {
+                val notSynced = stringResource(R.string.library_exercise_not_synced)
+                Box(
+                    modifier = Modifier
+                        .size(7.dp)
+                        .background(color = Amber, shape = CircleShape)
+                        .semantics { contentDescription = notSynced },
+                )
+            }
+        }
         val equipment = exercise.equipment
         if (equipment != null) {
             Text(
@@ -302,6 +319,7 @@ private fun Preview() {
                         equipment = Equipment.BODYWEIGHT,
                         muscleGroups = listOf(MuscleGroup.LATS, MuscleGroup.BICEPS),
                         updatedAtEpochMs = 0L,
+                        syncPending = true,
                     ),
                 ),
                 pendingCount = 1,
