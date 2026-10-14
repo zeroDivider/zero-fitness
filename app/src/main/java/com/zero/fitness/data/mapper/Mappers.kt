@@ -46,6 +46,7 @@ fun ExerciseEntity.toDomain(): Exercise? {
         isCompound = isCompound,
         videoUrl = videoUrl,
         updatedAtEpochMs = updatedAtEpochMs,
+        syncPending = syncPending,
     )
 }
 

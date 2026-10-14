@@ -16,6 +16,7 @@ data class Exercise(
     val isCompound: Boolean = true,
     val videoUrl: String? = null,
     val updatedAtEpochMs: Long,
+    val syncPending: Boolean = false,
 )
 
 data class WorkoutPlan(
