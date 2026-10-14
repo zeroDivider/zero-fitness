@@ -50,19 +50,19 @@ import com.zero.fitness.ui.theme.ZeroFitnessTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewExerciseScreen(
-    viewModel: NewExerciseViewModel = hiltViewModel(),
+fun ExerciseEditorScreen(
+    viewModel: ExerciseEditorViewModel = hiltViewModel(),
     onNavigateUp: () -> Unit,
 ) {
     val state by viewModel.viewState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
-            if (event is NewExerciseEvent.Saved) onNavigateUp()
+            if (event is ExerciseEditorEvent.Saved) onNavigateUp()
         }
     }
 
-    NewExerciseScreenContent(
+    ExerciseEditorScreenContent(
         state = state,
         onNameChange = viewModel::updateName,
         onDescriptionChange = viewModel::updateDescription,
@@ -80,8 +80,8 @@ fun NewExerciseScreen(
 }
 
 @Composable
-private fun NewExerciseScreenContent(
-    state: NewExerciseScreenState,
+private fun ExerciseEditorScreenContent(
+    state: ExerciseEditorScreenState,
     onNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onNameSrChange: (String) -> Unit,
@@ -103,16 +103,16 @@ private fun NewExerciseScreenContent(
             AppBar(
                 title = stringResource(
                     if (state.isEdit) {
-                        R.string.new_exercise_app_bar_title_edit
+                        R.string.exercise_editor_app_bar_title_edit
                     } else {
-                        R.string.new_exercise_app_bar_title
+                        R.string.exercise_editor_app_bar_title
                     },
                 ),
                 subtitle = stringResource(
                     if (state.isEdit) {
-                        R.string.new_exercise_app_bar_subtitle_edit
+                        R.string.exercise_editor_app_bar_subtitle_edit
                     } else {
-                        R.string.new_exercise_app_bar_subtitle
+                        R.string.exercise_editor_app_bar_subtitle
                     },
                 ),
                 onBackClick = onNavigateUp,
@@ -123,7 +123,7 @@ private fun NewExerciseScreenContent(
                 AnimatedVisibility(visible = state.error != null) {
                     val error = state.error
                     Text(
-                        text = if (error == null) "" else newExerciseErrorText(error),
+                        text = if (error == null) "" else exerciseEditorErrorText(error),
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier
@@ -136,7 +136,7 @@ private fun NewExerciseScreenContent(
                         .fillMaxWidth()
                         .padding(horizontal = 18.dp)
                         .padding(top = 14.dp, bottom = 12.dp),
-                    label = stringResource(R.string.new_exercise_save),
+                    label = stringResource(R.string.exercise_editor_save),
                     colors = AppButtonDefaults.buttonColors(),
                     isEnabled = !state.isSaving && !state.isLoading,
                     onClickAction = onSave,
@@ -152,7 +152,7 @@ private fun NewExerciseScreenContent(
                 modifier = Modifier.fillMaxSize(),
                 sizes = scrollFadeSizes,
             ) {
-                NewExerciseForm(
+                ExerciseEditorForm(
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(scrollState)
@@ -176,8 +176,8 @@ private fun NewExerciseScreenContent(
 }
 
 @Composable
-private fun NewExerciseForm(
-    state: NewExerciseScreenState,
+private fun ExerciseEditorForm(
+    state: ExerciseEditorScreenState,
     onNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onNameSrChange: (String) -> Unit,
@@ -203,18 +203,18 @@ private fun NewExerciseForm(
 
     Column(modifier = modifier) {
         Text(
-            text = stringResource(R.string.new_exercise_label_name_sr),
+            text = stringResource(R.string.exercise_editor_label_name_sr),
             style = MaterialTheme.typography.titleSmall,
             modifier = Modifier.padding(top = 14.dp),
         )
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = state.nameSr,
-            label = { Text(stringResource(R.string.new_exercise_hint_name_sr)) },
+            label = { Text(stringResource(R.string.exercise_editor_hint_name_sr)) },
             onValueChange = onNameSrChange,
         )
         Text(
-            text = stringResource(R.string.new_exercise_label_description_sr),
+            text = stringResource(R.string.exercise_editor_label_description_sr),
             style = MaterialTheme.typography.titleSmall,
             modifier = Modifier.padding(top = 14.dp),
         )
@@ -222,21 +222,21 @@ private fun NewExerciseForm(
             modifier = Modifier.fillMaxWidth(),
             value = state.descriptionSr,
             minLines = 4,
-            label = { Text(stringResource(R.string.new_exercise_hint_description_sr)) },
+            label = { Text(stringResource(R.string.exercise_editor_hint_description_sr)) },
             onValueChange = onDescriptionSrChange,
         )
         Text(
-            text = stringResource(R.string.new_exercise_label_name),
+            text = stringResource(R.string.exercise_editor_label_name),
             style = MaterialTheme.typography.titleSmall,
         )
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = state.name,
-            label = { Text(stringResource(R.string.new_exercise_hint_name)) },
+            label = { Text(stringResource(R.string.exercise_editor_hint_name)) },
             onValueChange = onNameChange,
         )
         Text(
-            text = stringResource(R.string.new_exercise_label_description),
+            text = stringResource(R.string.exercise_editor_label_description),
             style = MaterialTheme.typography.titleSmall,
             modifier = Modifier.padding(top = 14.dp),
         )
@@ -244,11 +244,11 @@ private fun NewExerciseForm(
             modifier = Modifier.fillMaxWidth(),
             value = state.description,
             minLines = 4,
-            label = { Text(stringResource(R.string.new_exercise_hint_description)) },
+            label = { Text(stringResource(R.string.exercise_editor_hint_description)) },
             onValueChange = onDescriptionChange,
         )
         Text(
-            text = stringResource(R.string.new_exercise_label_equipment),
+            text = stringResource(R.string.exercise_editor_label_equipment),
             style = MaterialTheme.typography.titleSmall,
             modifier = Modifier.padding(top = 14.dp),
         )
@@ -266,7 +266,7 @@ private fun NewExerciseForm(
             }
         }
         Text(
-            text = stringResource(R.string.new_exercise_label_exercise_type),
+            text = stringResource(R.string.exercise_editor_label_exercise_type),
             style = MaterialTheme.typography.titleSmall,
             modifier = Modifier.padding(top = 14.dp),
         )
@@ -291,7 +291,7 @@ private fun NewExerciseForm(
             onCheckedChange = onTrackWeightChange,
         )
         Text(
-            text = stringResource(R.string.new_exercise_label_muscle_groups),
+            text = stringResource(R.string.exercise_editor_label_muscle_groups),
             style = MaterialTheme.typography.titleSmall,
             modifier = Modifier.padding(top = 14.dp),
         )
@@ -310,7 +310,7 @@ private fun NewExerciseForm(
             }
         }
         Text(
-            text = stringResource(R.string.new_exercise_label_difficulty),
+            text = stringResource(R.string.exercise_editor_label_difficulty),
             style = MaterialTheme.typography.titleSmall,
             modifier = Modifier.padding(top = 14.dp),
         )
@@ -334,14 +334,14 @@ private fun NewExerciseForm(
             }
         }
         Text(
-            text = stringResource(R.string.new_exercise_label_video_url),
+            text = stringResource(R.string.exercise_editor_label_video_url),
             style = MaterialTheme.typography.titleSmall,
             modifier = Modifier.padding(top = 14.dp),
         )
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = state.videoUrl,
-            label = { Text(stringResource(R.string.new_exercise_hint_video_url)) },
+            label = { Text(stringResource(R.string.exercise_editor_hint_video_url)) },
             onValueChange = onVideoUrlChange,
         )
     }
@@ -365,22 +365,22 @@ private fun difficultyLevelBubbleColors(
 )
 
 @Composable
-private fun newExerciseErrorText(error: NewExerciseError): String = when (error) {
-    NewExerciseError.NameRequired -> stringResource(R.string.new_exercise_error_name_required)
-    NewExerciseError.EquipmentRequired -> stringResource(R.string.new_exercise_error_equipment_required)
-    NewExerciseError.TypeRequired -> stringResource(R.string.new_exercise_error_type_required)
-    NewExerciseError.VideoUrlInvalid -> stringResource(R.string.new_exercise_error_video_url_invalid)
-    NewExerciseError.NotFound -> stringResource(R.string.new_exercise_error_not_found)
-    NewExerciseError.Storage -> stringResource(R.string.new_exercise_error_storage)
-    NewExerciseError.Unknown -> stringResource(R.string.new_exercise_error_unknown)
+private fun exerciseEditorErrorText(error: ExerciseEditorError): String = when (error) {
+    ExerciseEditorError.NameRequired -> stringResource(R.string.exercise_editor_error_name_required)
+    ExerciseEditorError.EquipmentRequired -> stringResource(R.string.exercise_editor_error_equipment_required)
+    ExerciseEditorError.TypeRequired -> stringResource(R.string.exercise_editor_error_type_required)
+    ExerciseEditorError.VideoUrlInvalid -> stringResource(R.string.exercise_editor_error_video_url_invalid)
+    ExerciseEditorError.NotFound -> stringResource(R.string.exercise_editor_error_not_found)
+    ExerciseEditorError.Storage -> stringResource(R.string.exercise_editor_error_storage)
+    ExerciseEditorError.Unknown -> stringResource(R.string.exercise_editor_error_unknown)
 }
 
 @Preview
 @Composable
 private fun Preview() {
     ZeroFitnessTheme(dynamicColor = false) {
-        NewExerciseScreenContent(
-            state = NewExerciseScreenState(
+        ExerciseEditorScreenContent(
+            state = ExerciseEditorScreenState(
                 name = "Barbell squat",
                 description = "Sit back and stand up with the bar on your back.",
                 nameSr = "Čučanj sa šipkom",

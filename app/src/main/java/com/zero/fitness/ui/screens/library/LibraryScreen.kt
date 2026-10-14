@@ -33,7 +33,7 @@ import java.util.UUID
 @Composable
 fun LibraryScreen(
     onNavigateUp: () -> Unit,
-    onNavigateToNewExercise: () -> Unit,
+    onNavigateToCreateExercise: () -> Unit,
     onNavigateToExerciseDetails: (UUID) -> Unit,
     viewModel: LibraryViewModel = hiltViewModel(),
 ) {
@@ -87,7 +87,7 @@ fun LibraryScreen(
                     modifier = Modifier.fillMaxWidth(),
                     label = stringResource(R.string.library_add_exercise),
                     colors = AppButtonDefaults.buttonColors(),
-                    onClickAction = { onNavigateToNewExercise() }
+                    onClickAction = { onNavigateToCreateExercise() }
                 )
             }
         }

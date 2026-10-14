@@ -69,7 +69,7 @@ fun MainScreen(
             )
             libraryScreen(
                 onNavigateUp = { navController.navigateUp() },
-                onNavigateToNewExercise = onNavigateToCreateExercise,
+                onNavigateToCreateExercise = onNavigateToCreateExercise,
                 onNavigateToExerciseDetails = onNavigateToExerciseDetails,
             )
             historyScreen(

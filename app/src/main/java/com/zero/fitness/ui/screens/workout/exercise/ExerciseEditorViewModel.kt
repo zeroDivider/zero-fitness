@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class NewExerciseViewModel @Inject constructor(
+class ExerciseEditorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val exerciseRepository: ExerciseRepository,
 ) : ViewModel() {
@@ -34,21 +34,21 @@ class NewExerciseViewModel @Inject constructor(
     private var loaded: Exercise? = null
 
     private val _viewState = MutableStateFlow(
-        NewExerciseScreenState(
+        ExerciseEditorScreenState(
             isEdit = isEdit,
             isLoading = isEdit,
         ),
     )
     val viewState = _viewState.asStateFlow()
 
-    private val _events = Channel<NewExerciseEvent>(Channel.BUFFERED)
+    private val _events = Channel<ExerciseEditorEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
     init {
         if (isEdit) {
             if (parsedRouteId == null) {
                 _viewState.update {
-                    it.copy(isLoading = false, error = NewExerciseError.NotFound)
+                    it.copy(isLoading = false, error = ExerciseEditorError.NotFound)
                 }
             } else {
                 viewModelScope.launch {
@@ -56,7 +56,7 @@ class NewExerciseViewModel @Inject constructor(
                         .onSuccess { exercise ->
                             if (exercise == null) {
                                 _viewState.update {
-                                    it.copy(isLoading = false, error = NewExerciseError.NotFound)
+                                    it.copy(isLoading = false, error = ExerciseEditorError.NotFound)
                                 }
                             } else {
                                 loaded = exercise
@@ -68,9 +68,9 @@ class NewExerciseViewModel @Inject constructor(
                                 it.copy(
                                     isLoading = false,
                                     error = if (error is AppError.Storage) {
-                                        NewExerciseError.Storage
+                                        ExerciseEditorError.Storage
                                     } else {
-                                        NewExerciseError.Unknown
+                                        ExerciseEditorError.Unknown
                                     },
                                 )
                             }
@@ -127,17 +127,17 @@ class NewExerciseViewModel @Inject constructor(
     fun save() {
         if (_viewState.value.isSaving || _viewState.value.isLoading) return
         if (isEdit && loaded == null) {
-            _viewState.update { it.copy(error = NewExerciseError.NotFound) }
+            _viewState.update { it.copy(error = ExerciseEditorError.NotFound) }
             return
         }
         _viewState.update { it.copy(isSaving = true, error = null) }
         val state = _viewState.value
         val validationError = when {
-            state.name.isBlank() -> NewExerciseError.NameRequired
-            state.equipment == null -> NewExerciseError.EquipmentRequired
-            state.selectedType == null -> NewExerciseError.TypeRequired
+            state.name.isBlank() -> ExerciseEditorError.NameRequired
+            state.equipment == null -> ExerciseEditorError.EquipmentRequired
+            state.selectedType == null -> ExerciseEditorError.TypeRequired
             state.videoUrl.isNotBlank() && !state.videoUrl.trim().isHttpUrl() ->
-                NewExerciseError.VideoUrlInvalid
+                ExerciseEditorError.VideoUrlInvalid
             else -> null
         }
         if (validationError != null) {
@@ -147,15 +147,15 @@ class NewExerciseViewModel @Inject constructor(
         val exercise = state.toExercise(exerciseId, loaded)
         viewModelScope.launch {
             exerciseRepository.save(exercise)
-                .onSuccess { _events.send(NewExerciseEvent.Saved) }
+                .onSuccess { _events.send(ExerciseEditorEvent.Saved) }
                 .onFailure { error ->
                     _viewState.update {
                         it.copy(
                             isSaving = false,
                             error = if (error is AppError.Storage) {
-                                NewExerciseError.Storage
+                                ExerciseEditorError.Storage
                             } else {
-                                NewExerciseError.Unknown
+                                ExerciseEditorError.Unknown
                             },
                         )
                     }
@@ -167,7 +167,7 @@ class NewExerciseViewModel @Inject constructor(
 private fun String.isHttpUrl(): Boolean =
     startsWith("http://") || startsWith("https://")
 
-private fun Exercise.toFormState() = NewExerciseScreenState(
+private fun Exercise.toFormState() = ExerciseEditorScreenState(
     name = name,
     description = description.orEmpty(),
     nameSr = nameSr.orEmpty(),
@@ -183,7 +183,7 @@ private fun Exercise.toFormState() = NewExerciseScreenState(
     error = null,
 )
 
-private fun NewExerciseScreenState.toExercise(id: UUID, loaded: Exercise?): Exercise {
+private fun ExerciseEditorScreenState.toExercise(id: UUID, loaded: Exercise?): Exercise {
     val formValues = Exercise(
         id = id,
         name = name.trim(),
@@ -212,7 +212,7 @@ private fun NewExerciseScreenState.toExercise(id: UUID, loaded: Exercise?): Exer
     ) ?: formValues
 }
 
-data class NewExerciseScreenState(
+data class ExerciseEditorScreenState(
     val name: String = "",
     val description: String = "",
     val nameSr: String = "",
@@ -226,10 +226,10 @@ data class NewExerciseScreenState(
     val isEdit: Boolean = false,
     val isLoading: Boolean = false,
     val isSaving: Boolean = false,
-    val error: NewExerciseError? = null,
+    val error: ExerciseEditorError? = null,
 )
 
-enum class NewExerciseError {
+enum class ExerciseEditorError {
     NameRequired,
     EquipmentRequired,
     TypeRequired,
@@ -239,6 +239,6 @@ enum class NewExerciseError {
     Unknown,
 }
 
-sealed interface NewExerciseEvent {
-    data object Saved : NewExerciseEvent
+sealed interface ExerciseEditorEvent {
+    data object Saved : ExerciseEditorEvent
 }

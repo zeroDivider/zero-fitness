@@ -11,12 +11,12 @@ data class ExerciseDetailsDestination(val exerciseId: String)
 
 fun NavGraphBuilder.exerciseDetailsScreen(
     onNavigateUp: () -> Unit,
-    onNavigateToUpdate: (UUID) -> Unit,
+    onNavigateToEditExercise: (UUID) -> Unit,
 ) {
     composable<ExerciseDetailsDestination> {
         ExerciseDetailsScreen(
             onNavigateUp = onNavigateUp,
-            onNavigateToUpdate = onNavigateToUpdate,
+            onNavigateToEditExercise = onNavigateToEditExercise,
         )
     }
 }

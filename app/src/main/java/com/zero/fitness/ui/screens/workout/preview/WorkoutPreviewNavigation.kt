@@ -7,18 +7,18 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data object PreviewWorkoutDestination
+data object WorkoutPreviewDestination
 
-fun NavGraphBuilder.previewWorkoutScreen(
+fun NavGraphBuilder.workoutPreviewScreen(
     onNavigateUp: () -> Unit,
 ) {
-    composable<PreviewWorkoutDestination> {
-        PreviewWorkoutScreen(
+    composable<WorkoutPreviewDestination> {
+        WorkoutPreviewScreen(
             onNavigateUp = onNavigateUp,
         )
     }
 }
 
-fun NavController.navigateToPreviewWorkout() {
-    navigate(PreviewWorkoutDestination)
+fun NavController.navigateToWorkoutPreview() {
+    navigate(WorkoutPreviewDestination)
 }

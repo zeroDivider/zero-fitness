@@ -11,14 +11,14 @@ import com.zero.fitness.ui.screens.login.loginScreen
 import com.zero.fitness.ui.screens.main.MainDestination
 import com.zero.fitness.ui.screens.main.mainScreen
 import com.zero.fitness.ui.screens.main.navigateToMain
+import com.zero.fitness.ui.screens.workout.editor.navigateToWorkoutEditor
+import com.zero.fitness.ui.screens.workout.editor.workoutEditorScreen
 import com.zero.fitness.ui.screens.workout.exercise.exerciseDetailsScreen
+import com.zero.fitness.ui.screens.workout.exercise.exerciseEditorScreen
 import com.zero.fitness.ui.screens.workout.exercise.navigateToExerciseDetails
-import com.zero.fitness.ui.screens.workout.exercise.navigateToNewExercise
-import com.zero.fitness.ui.screens.workout.exercise.newExerciseScreen
-import com.zero.fitness.ui.screens.workout.new.navigateToNewWorkout
-import com.zero.fitness.ui.screens.workout.new.newWorkoutScreen
-import com.zero.fitness.ui.screens.workout.preview.navigateToPreviewWorkout
-import com.zero.fitness.ui.screens.workout.preview.previewWorkoutScreen
+import com.zero.fitness.ui.screens.workout.exercise.navigateToExerciseEditor
+import com.zero.fitness.ui.screens.workout.preview.navigateToWorkoutPreview
+import com.zero.fitness.ui.screens.workout.preview.workoutPreviewScreen
 import com.zero.fitness.ui.screens.workout.session.navigateToWorkoutSession
 import com.zero.fitness.ui.screens.workout.session.workoutSessionScreen
 
@@ -52,27 +52,27 @@ fun AppRoot() {
             onNavigateToMain = { navController.navigateToMain() },
         )
         mainScreen(
-            onNavigateToCreateExercise = { navController.navigateToNewExercise() },
+            onNavigateToCreateExercise = { navController.navigateToExerciseEditor() },
             onNavigateToExerciseDetails = { id -> navController.navigateToExerciseDetails(id) },
-            onNavigateToCreateWorkout = { navController.navigateToNewWorkout() },
-            onNavigateToWorkoutPreview = { navController.navigateToPreviewWorkout() },
+            onNavigateToCreateWorkout = { navController.navigateToWorkoutEditor() },
+            onNavigateToWorkoutPreview = { navController.navigateToWorkoutPreview() },
             onNavigateToWorkout = { navController.navigateToWorkoutSession() },
         )
-        newWorkoutScreen(
-            onNavigateToNewExercise = { navController.navigateToNewExercise() },
+        workoutEditorScreen(
+            onNavigateToCreateExercise = { navController.navigateToExerciseEditor() },
             onNavigateUp = { navController.navigateUp() },
         )
-        newExerciseScreen(
+        exerciseEditorScreen(
             onNavigateUp = { navController.navigateUp() },
         )
         exerciseDetailsScreen(
             onNavigateUp = { navController.navigateUp() },
-            onNavigateToUpdate = { id -> navController.navigateToNewExercise(id) },
+            onNavigateToEditExercise = { id -> navController.navigateToExerciseEditor(id) },
         )
         workoutSessionScreen(
             onNavigateUp = { navController.navigateUp() },
         )
-        previewWorkoutScreen(
+        workoutPreviewScreen(
             onNavigateUp = { navController.navigateUp() },
         )
     }

@@ -69,14 +69,14 @@ import java.util.UUID
 @Composable
 fun ExerciseDetailsScreen(
     onNavigateUp: () -> Unit,
-    onNavigateToUpdate: (UUID) -> Unit,
+    onNavigateToEditExercise: (UUID) -> Unit,
     viewModel: ExerciseDetailsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.viewState.collectAsStateWithLifecycle()
     ExerciseDetailsScreenContent(
         state = state,
         onNavigateUp = onNavigateUp,
-        onNavigateToUpdate = onNavigateToUpdate,
+        onNavigateToEditExercise = onNavigateToEditExercise,
     )
 }
 
@@ -84,7 +84,7 @@ fun ExerciseDetailsScreen(
 private fun ExerciseDetailsScreenContent(
     state: ExerciseDetailsScreenState,
     onNavigateUp: () -> Unit,
-    onNavigateToUpdate: (UUID) -> Unit,
+    onNavigateToEditExercise: (UUID) -> Unit,
 ) {
     val scrollFadeSizes = ScrollEdgeFadeDefaults.sizes()
     val scrollState = rememberScrollState()
@@ -103,7 +103,7 @@ private fun ExerciseDetailsScreenContent(
                             icon = Icons.Default.Edit,
                             contentDescription = stringResource(R.string.exercise_details_update),
                             onClick = {
-                                state.exerciseId.toUuidOrNull()?.let(onNavigateToUpdate)
+                                state.exerciseId.toUuidOrNull()?.let(onNavigateToEditExercise)
                             },
                         )
                     }
@@ -415,7 +415,7 @@ private fun Preview() {
                 isLoading = false,
             ),
             onNavigateUp = {},
-            onNavigateToUpdate = {},
+            onNavigateToEditExercise = {},
         )
     }
 }

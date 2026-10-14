@@ -14,7 +14,7 @@ import com.zero.fitness.ui.screens.common.AppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PreviewWorkoutScreen(
+fun WorkoutPreviewScreen(
     onNavigateUp: () -> Unit,
 ) {
     Scaffold(
@@ -40,5 +40,5 @@ fun PreviewWorkoutScreen(
 @Preview
 @Composable
 private fun Preview() {
-    PreviewWorkoutScreen {}
+    WorkoutPreviewScreen {}
 }

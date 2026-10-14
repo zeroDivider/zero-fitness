@@ -46,33 +46,33 @@
     <string name="difficulty_advanced">Napredni</string>
     <string name="difficulty_elite">Elita</string>
 
-    <!-- Screen: New exercise -->
-    <string name="new_exercise_app_bar_title">Nova vežba</string>
-    <string name="new_exercise_app_bar_subtitle">Imenuj pokret i kako želiš da ga pratiš</string>
-    <string name="new_exercise_save">Sačuvaj vežbu</string>
-    <string name="new_exercise_error_name_required">Unesi naziv (Engleski)</string>
-    <string name="new_exercise_error_equipment_required">Izaberi opremu</string>
-    <string name="new_exercise_error_type_required">Izaberi tip vežbe</string>
-    <string name="new_exercise_error_storage">Vežba nije sačuvana</string>
-    <string name="new_exercise_error_unknown">Nešto je pošlo po zlu</string>
-    <string name="new_exercise_label_name">Naziv (Engleski)</string>
-    <string name="new_exercise_hint_name">Unesi naziv</string>
-    <string name="new_exercise_label_description">Opis (Engleski)</string>
-    <string name="new_exercise_hint_description">Unesi kratak opis</string>
-    <string name="new_exercise_label_name_sr">Naziv</string>
-    <string name="new_exercise_hint_name_sr">Unesi srpski naziv</string>
-    <string name="new_exercise_label_description_sr">Opis</string>
-    <string name="new_exercise_hint_description_sr">Unesi srpski opis</string>
-    <string name="new_exercise_label_equipment">Oprema</string>
-    <string name="new_exercise_label_exercise_type">Tip vežbe</string>
-    <string name="new_exercise_label_muscle_groups">Primarne mišićne grupe</string>
-    <string name="new_exercise_label_difficulty">Nivo težine</string>
-    <string name="new_exercise_label_video_url">Video URL (opciono)</string>
-    <string name="new_exercise_hint_video_url">https://youtube.com/\u2026</string>
-    <string name="new_exercise_error_video_url_invalid">Unesi važeći link</string>
-    <string name="new_exercise_app_bar_title_edit">Izmeni vežbu</string>
-    <string name="new_exercise_app_bar_subtitle_edit">Ažuriraj pokret i kako želiš da ga pratiš</string>
-    <string name="new_exercise_error_not_found">Ova vežba nije pronađena</string>
+    <!-- Screen: Exercise editor -->
+    <string name="exercise_editor_app_bar_title">Nova vežba</string>
+    <string name="exercise_editor_app_bar_subtitle">Imenuj pokret i kako želiš da ga pratiš</string>
+    <string name="exercise_editor_save">Sačuvaj vežbu</string>
+    <string name="exercise_editor_error_name_required">Unesi naziv (Engleski)</string>
+    <string name="exercise_editor_error_equipment_required">Izaberi opremu</string>
+    <string name="exercise_editor_error_type_required">Izaberi tip vežbe</string>
+    <string name="exercise_editor_error_storage">Vežba nije sačuvana</string>
+    <string name="exercise_editor_error_unknown">Nešto je pošlo po zlu</string>
+    <string name="exercise_editor_label_name">Naziv (Engleski)</string>
+    <string name="exercise_editor_hint_name">Unesi naziv</string>
+    <string name="exercise_editor_label_description">Opis (Engleski)</string>
+    <string name="exercise_editor_hint_description">Unesi kratak opis</string>
+    <string name="exercise_editor_label_name_sr">Naziv</string>
+    <string name="exercise_editor_hint_name_sr">Unesi srpski naziv</string>
+    <string name="exercise_editor_label_description_sr">Opis</string>
+    <string name="exercise_editor_hint_description_sr">Unesi srpski opis</string>
+    <string name="exercise_editor_label_equipment">Oprema</string>
+    <string name="exercise_editor_label_exercise_type">Tip vežbe</string>
+    <string name="exercise_editor_label_muscle_groups">Primarne mišićne grupe</string>
+    <string name="exercise_editor_label_difficulty">Nivo težine</string>
+    <string name="exercise_editor_label_video_url">Video URL (opciono)</string>
+    <string name="exercise_editor_hint_video_url">https://youtube.com/\u2026</string>
+    <string name="exercise_editor_error_video_url_invalid">Unesi važeći link</string>
+    <string name="exercise_editor_app_bar_title_edit">Izmeni vežbu</string>
+    <string name="exercise_editor_app_bar_subtitle_edit">Ažuriraj pokret i kako želiš da ga pratiš</string>
+    <string name="exercise_editor_error_not_found">Ova vežba nije pronađena</string>
 
     <!-- Screen: Exercise details -->
     <string name="exercise_details_app_bar_title">Detalji vežbe</string>
