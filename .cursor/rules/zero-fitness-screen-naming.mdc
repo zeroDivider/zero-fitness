@@ -1,0 +1,41 @@
+---
+description: Zero Fitness naming conventions for screens, navigation, callbacks, and string keys
+globs: app/src/main/java/com/zero/fitness/ui/**/*.kt
+alwaysApply: false
+---
+
+# Screen naming
+
+Name screens **entity first, then role**: `<Entity><Role>Screen`.
+
+| Role | Purpose | Example |
+|---|---|---|
+| `Editor` | Create and edit (optional id) | `ExerciseEditorScreen` |
+| `Details` | Read-only view of one item | `ExerciseDetailsScreen` |
+| `Preview` | Summary before an action | `WorkoutPreviewScreen` |
+| `Session` | Live, in-progress flow | `WorkoutSessionScreen` |
+
+- Don't use `New`, `Create`, `Edit`, `Update` or other verbs in screen names; an `Editor` covers both create and edit.
+- Every type for a screen shares its prefix: `<Name>Screen`, `<Name>ScreenContent`, `<Name>ViewModel`, `<Name>ScreenState`, `<Name>Error`, `<Name>Event`, `<Name>Destination`, plus files `<Name>Screen.kt` and `<Name>Navigation.kt`.
+- String keys use the snake_case prefix: `exercise_editor_*`, `exercise_details_*`.
+- Reusable components inside a feature are named for what they are, not for the screen they first appeared on (`TrackWeightToggle`, not `NewExerciseTrackWeightToggle`).
+
+## Navigation
+
+- Helpers are named after the screen they open: `NavGraphBuilder.exerciseEditorScreen()`, `NavController.navigateToExerciseEditor(...)`.
+- Editors take a nullable id where `null` means create, not overloads or `""`:
+
+```kotlin
+// ❌ BAD
+data class NewExerciseDestination(val exerciseId: String = "")
+fun NavController.navigateToNewExercise(exerciseId: String? = null) { ... }
+fun NavController.navigateToNewExercise(exerciseId: UUID) { ... }
+
+// ✅ GOOD
+data class ExerciseEditorDestination(val exerciseId: String? = null)
+fun NavController.navigateToExerciseEditor(exerciseId: UUID? = null) {
+    navigate(ExerciseEditorDestination(exerciseId = exerciseId?.toString()))
+}
+```
+
+- Callbacks are named after what the user wants to do: `onNavigateToCreateExercise`, `onNavigateToEditExercise(id)`, `onNavigateToExerciseDetails(id)`, `onNavigateUp`. Wire them to helpers in `AppRoot.kt`.
