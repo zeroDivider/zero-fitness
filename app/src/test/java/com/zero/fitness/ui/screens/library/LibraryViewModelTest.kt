@@ -272,6 +272,73 @@ class LibraryViewModelTest {
         }
     }
 
+    @Test
+    fun searchMatchesEnglishNameContainsIgnoreCase() {
+        runTest {
+            val bench = exercise("Bench Press")
+            val squat = exercise("Squat")
+            val viewModel = LibraryViewModel(
+                FakeExerciseRepository(exercises = listOf(bench, squat)),
+                FakeSyncPolicy(),
+            )
+            collectState(viewModel)
+
+            viewModel.setSearchQuery("bEn")
+
+            assertEquals(listOf(bench), viewModel.state.value.exercises)
+            assertEquals("bEn", viewModel.state.value.searchQuery)
+        }
+    }
+
+    @Test
+    fun searchMatchesSerbianNameContainsIgnoreCase() {
+        runTest {
+            val bench = exercise("Bench Press", nameSr = "Benč pritisak")
+            val squat = exercise("Squat", nameSr = "Čučanj")
+            val viewModel = LibraryViewModel(
+                FakeExerciseRepository(exercises = listOf(bench, squat)),
+                FakeSyncPolicy(),
+            )
+            collectState(viewModel)
+
+            viewModel.setSearchQuery("čuč")
+
+            assertEquals(listOf(squat), viewModel.state.value.exercises)
+        }
+    }
+
+    @Test
+    fun searchAndMuscleFilterApplyTogether() {
+        runTest {
+            val incline = exercise(
+                "Incline Bench",
+                muscleGroups = listOf(MuscleGroup.CHEST),
+            )
+            val decline = exercise(
+                "Decline Bench",
+                muscleGroups = listOf(MuscleGroup.CHEST),
+            )
+            val row = exercise(
+                "Barbell Row",
+                muscleGroups = listOf(MuscleGroup.LATS),
+            )
+            val viewModel = LibraryViewModel(
+                FakeExerciseRepository(exercises = listOf(incline, decline, row)),
+                FakeSyncPolicy(),
+            )
+            collectState(viewModel)
+
+            viewModel.setMuscleFilter(MuscleGroup.CHEST)
+            viewModel.setSearchQuery("incline")
+
+            assertEquals(listOf(incline), viewModel.state.value.exercises)
+            assertEquals(
+                listOf(MuscleGroup.CHEST, MuscleGroup.LATS),
+                viewModel.state.value.availableMuscleGroups,
+            )
+        }
+    }
+
     fun TestScope.collectState(viewModel: LibraryViewModel) {
         backgroundScope.launch(UnconfinedTestDispatcher()) {
             viewModel.state.collect {}
@@ -280,10 +347,12 @@ class LibraryViewModelTest {
 
     fun exercise(
         name: String,
+        nameSr: String? = null,
         muscleGroups: List<MuscleGroup> = emptyList(),
     ) = Exercise(
         id = UUID.randomUUID(),
         name = name,
+        nameSr = nameSr,
         muscleGroups = muscleGroups,
         updatedAtEpochMs = 0L,
     )
