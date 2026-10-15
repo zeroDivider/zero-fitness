@@ -52,6 +52,7 @@ class LibraryViewModelTest {
 
             assertEquals(
                 LibraryScreenState(
+                    isLoading = false,
                     exercises = listOf(squat),
                     pendingCount = 2,
                     syncEnabled = true,
@@ -76,6 +77,7 @@ class LibraryViewModelTest {
 
             assertEquals(
                 LibraryScreenState(
+                    isLoading = false,
                     exercises = listOf(squat),
                     pendingCount = 4,
                     syncEnabled = true,

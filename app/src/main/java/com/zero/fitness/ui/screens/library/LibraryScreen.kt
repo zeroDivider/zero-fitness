@@ -127,24 +127,37 @@ private fun LibraryScreenContent(
                         onMuscleFilterChange = onMuscleFilterChange,
                     )
                 }
-                if (state.exercises.isEmpty()) {
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(text = stringResource(R.string.library_empty))
+                when {
+                    state.isLoading -> {
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier.weight(1f),
-                    ) {
-                        items(state.exercises, key = { it.id }) { exercise ->
-                            LibraryExerciseRow(
-                                exercise = exercise,
-                                onClick = { onNavigateToExerciseDetails(exercise.id) },
-                            )
+                    state.exercises.isEmpty() -> {
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(text = stringResource(R.string.library_empty))
+                        }
+                    }
+                    else -> {
+                        LazyColumn(
+                            modifier = Modifier.weight(1f),
+                        ) {
+                            items(state.exercises, key = { it.id }) { exercise ->
+                                LibraryExerciseRow(
+                                    exercise = exercise,
+                                    onClick = { onNavigateToExerciseDetails(exercise.id) },
+                                )
+                            }
                         }
                     }
                 }
@@ -303,6 +316,7 @@ private fun Preview() {
     ZeroFitnessTheme(dynamicColor = false) {
         LibraryScreenContent(
             state = LibraryScreenState(
+                isLoading = false,
                 exercises = listOf(
                     Exercise(
                         id = UUID.randomUUID(),
@@ -347,9 +361,26 @@ private fun PreviewEmptySyncing() {
     ZeroFitnessTheme(dynamicColor = false) {
         LibraryScreenContent(
             state = LibraryScreenState(
+                isLoading = false,
                 syncEnabled = true,
                 isSyncing = true,
             ),
+            onNavigateUp = {},
+            onNavigateToCreateExercise = {},
+            onNavigateToExerciseDetails = {},
+            onSearchQueryChange = {},
+            onMuscleFilterChange = {},
+            onSync = {},
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewLoading() {
+    ZeroFitnessTheme(dynamicColor = false) {
+        LibraryScreenContent(
+            state = LibraryScreenState(isLoading = true),
             onNavigateUp = {},
             onNavigateToCreateExercise = {},
             onNavigateToExerciseDetails = {},
