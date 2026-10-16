@@ -102,4 +102,5 @@
     <string name="library_filter_all">Sve</string>
     <string name="library_exercise_not_synced">Još nije sinhronizovano</string>
     <string name="library_search_hint">Pretraži vežbe</string>
+    <string name="library_exercise_weight_pill">⚖ Težina</string>
 </resources>
