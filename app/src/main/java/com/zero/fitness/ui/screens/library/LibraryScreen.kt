@@ -1,16 +1,22 @@
 package com.zero.fitness.ui.screens.library
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -21,6 +27,8 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,11 +50,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zero.fitness.R
+import com.zero.fitness.domain.model.DifficultyLevel
 import com.zero.fitness.domain.model.Equipment
 import com.zero.fitness.domain.model.Exercise
 import com.zero.fitness.domain.model.MuscleGroup
@@ -54,9 +64,19 @@ import com.zero.fitness.ui.resources.labelRes
 import com.zero.fitness.ui.screens.common.AppBar
 import com.zero.fitness.ui.screens.common.AppButton
 import com.zero.fitness.ui.screens.common.AppButtonDefaults
+import com.zero.fitness.ui.screens.common.Bubble
+import com.zero.fitness.ui.screens.common.BubblesDefaults
 import com.zero.fitness.ui.screens.common.InteractiveBubble
 import com.zero.fitness.ui.theme.Amber
+import com.zero.fitness.ui.theme.BorderLight
+import com.zero.fitness.ui.theme.Coral
+import com.zero.fitness.ui.theme.DarkPurple
+import com.zero.fitness.ui.theme.Gray
+import com.zero.fitness.ui.theme.Green
+import com.zero.fitness.ui.theme.LightGray
+import com.zero.fitness.ui.theme.Transparent
 import com.zero.fitness.ui.theme.White
+import com.zero.fitness.ui.theme.Yellow
 import com.zero.fitness.ui.theme.ZeroFitnessTheme
 import kotlinx.coroutines.delay
 import java.util.UUID
@@ -298,36 +318,151 @@ private fun LibraryExerciseRow(
     exercise: Exercise,
     onClick: () -> Unit,
 ) {
-    Column(
+    val tagSizes = BubblesDefaults.bubbleSize(
+        borderRadius = 10.dp,
+        borderWidth = 0.dp,
+        verticalPadding = 3.dp,
+        horizontalPadding = 8.dp,
+    )
+    val pillColors = BubblesDefaults.bubbleColors(
+        backgroundSelected = LightGray,
+        borderSelected = Transparent,
+        labelSelected = Gray,
+    )
+    val typeBadgeColors = if (exercise.isCompound) {
+        BubblesDefaults.bubbleColors(
+            backgroundSelected = Yellow,
+            borderSelected = Transparent,
+            labelSelected = DarkPurple,
+        )
+    } else {
+        BubblesDefaults.bubbleColors(
+            backgroundSelected = LightGray,
+            borderSelected = Transparent,
+            labelSelected = Gray,
+        )
+    }
+
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(role = Role.Button, onClick = onClick)
-            .padding(vertical = 8.dp),
+            .padding(vertical = 4.dp)
+            .clickable(role = Role.Button, onClick = onClick),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = BorderStroke(1.dp, BorderLight),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min),
         ) {
-            Text(
-                text = exercise.name,
-                style = MaterialTheme.typography.titleSmall,
-            )
-            if (exercise.syncPending) {
-                val notSynced = stringResource(R.string.library_exercise_not_synced)
-                Box(
-                    modifier = Modifier
-                        .size(7.dp)
-                        .background(color = Amber, shape = CircleShape)
-                        .semantics { contentDescription = notSynced },
-                )
+            // Left colored difficulty edge
+            val edgeColor = when (exercise.difficulty) {
+                DifficultyLevel.BEGINNER -> Green
+                DifficultyLevel.INTERMEDIATE -> Yellow
+                DifficultyLevel.ADVANCED -> Coral
+                DifficultyLevel.ELITE -> DarkPurple
+                null -> Transparent
             }
-        }
-        val equipment = exercise.equipment
-        if (equipment != null) {
-            Text(
-                text = stringResource(equipment.labelRes()),
-                style = MaterialTheme.typography.bodySmall,
+            Box(
+                modifier = Modifier
+                    .width(4.dp)
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
+                    .background(edgeColor),
             )
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(12.dp),
+            ) {
+                // Top row: name + sync dot | exercise type badge
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = exercise.name,
+                            style = MaterialTheme.typography.titleMedium,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                        if (exercise.syncPending) {
+                            val notSynced = stringResource(R.string.library_exercise_not_synced)
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Box(
+                                modifier = Modifier
+                                    .size(7.dp)
+                                    .background(color = Amber, shape = CircleShape)
+                                    .semantics { contentDescription = notSynced },
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Bubble(
+                        label = stringResource(
+                            if (exercise.isCompound) R.string.exercise_type_compound
+                            else R.string.exercise_type_isolation,
+                        ),
+                        isSelected = true,
+                        colors = typeBadgeColors,
+                        sizes = tagSizes,
+                        style = MaterialTheme.typography.labelSmall,
+                    )
+                }
+
+                // Subtitle: Equipment · Muscles
+                val equipmentStr = exercise.equipment?.let { stringResource(it.labelRes()) }
+                val musclesStr = exercise.muscleGroups
+                    .map { stringResource(it.labelRes()) }
+                    .takeIf { it.isNotEmpty() }
+                    ?.joinToString(", ")
+                val subtitle = listOfNotNull(equipmentStr, musclesStr).joinToString(" · ")
+                if (subtitle.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(3.dp))
+                    Text(
+                        text = subtitle,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Gray,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+
+                // Bottom pills: difficulty + weight tracking
+                val difficulty = exercise.difficulty
+                if (difficulty != null || exercise.allowWeight) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        if (difficulty != null) {
+                            Bubble(
+                                label = stringResource(difficulty.labelRes()),
+                                isSelected = true,
+                                colors = pillColors,
+                                sizes = tagSizes,
+                                style = MaterialTheme.typography.labelSmall,
+                            )
+                        }
+                        if (exercise.allowWeight) {
+                            Bubble(
+                                label = stringResource(R.string.library_exercise_weight_pill),
+                                isSelected = true,
+                                colors = pillColors,
+                                sizes = tagSizes,
+                                style = MaterialTheme.typography.labelSmall,
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
