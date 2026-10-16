@@ -19,6 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -55,8 +58,8 @@ import com.zero.fitness.ui.screens.common.InteractiveBubble
 import com.zero.fitness.ui.theme.Amber
 import com.zero.fitness.ui.theme.White
 import com.zero.fitness.ui.theme.ZeroFitnessTheme
-import java.util.UUID
 import kotlinx.coroutines.delay
+import java.util.UUID
 
 private const val SEARCH_DEBOUNCE_MS = 250L
 
@@ -99,6 +102,7 @@ private fun LibraryScreenContent(
                 actionButton = {
                     if (state.showSyncAction) {
                         LibrarySyncAction(
+                            pendingCount = state.pendingCount,
                             isSyncing = state.isSyncing,
                             syncFailed = state.syncFailed,
                             onSync = onSync,
@@ -174,38 +178,56 @@ private fun LibraryScreenContent(
 
 @Composable
 private fun LibrarySyncAction(
+    pendingCount: Int,
     isSyncing: Boolean,
     syncFailed: Boolean,
     onSync: () -> Unit,
 ) {
-    val contentDescription = stringResource(
-        when {
-            isSyncing -> R.string.library_sync_syncing
-            syncFailed -> R.string.library_sync_failed_action
-            else -> R.string.library_sync_action
+    val contentDescription = when {
+        isSyncing -> stringResource(R.string.library_sync_syncing)
+        syncFailed -> stringResource(R.string.library_sync_failed_action)
+        else -> stringResource(R.string.library_sync_action, pendingCount)
+    }
+    BadgedBox(
+        badge = {
+            if (pendingCount > 0 && !isSyncing && !syncFailed) {
+                Badge(
+                    containerColor = Amber,
+                    contentColor = White,
+                ) {
+                    Text(
+                        text = if (pendingCount > 99) "99+" else "$pendingCount",
+                        style = MaterialTheme.typography.labelSmall,
+                    )
+                }
+            }
         },
-    )
-    IconButton(
-        onClick = onSync,
-        enabled = !isSyncing,
-        modifier = Modifier.semantics { this.contentDescription = contentDescription },
     ) {
-        if (isSyncing) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(22.dp),
-                color = White,
-                strokeWidth = 2.dp,
-            )
-        } else {
-            Icon(
-                imageVector = Icons.Default.Refresh,
-                contentDescription = null,
-                tint = if (syncFailed) {
-                    MaterialTheme.colorScheme.error
-                } else {
-                    White
-                },
-            )
+        IconButton(
+            onClick = onSync,
+            enabled = !isSyncing,
+            modifier = Modifier
+                .clip(shape = CircleShape)
+                .background(color = White.copy(alpha = 0.3f))
+                .semantics { this.contentDescription = contentDescription },
+        ) {
+            if (isSyncing) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(22.dp),
+                    color = White,
+                    strokeWidth = 2.dp,
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = null,
+                    tint = if (syncFailed) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        White
+                    },
+                )
+            }
         }
     }
 }
@@ -361,6 +383,7 @@ private fun PreviewEmptySyncing() {
     ZeroFitnessTheme(dynamicColor = false) {
         LibraryScreenContent(
             state = LibraryScreenState(
+                pendingCount = 3,
                 isLoading = false,
                 syncEnabled = true,
                 isSyncing = true,
@@ -386,6 +409,45 @@ private fun PreviewLoading() {
             onNavigateToExerciseDetails = {},
             onSearchQueryChange = {},
             onMuscleFilterChange = {},
+            onSync = {},
+        )
+    }
+}
+
+@Composable
+@Preview(name = "Sync Action — pending badge")
+private fun PreviewSyncActionPending() {
+    ZeroFitnessTheme(dynamicColor = false) {
+        LibrarySyncAction(
+            pendingCount = 3,
+            isSyncing = false,
+            syncFailed = false,
+            onSync = {},
+        )
+    }
+}
+
+@Composable
+@Preview(name = "Sync Action — syncing spinner")
+private fun PreviewSyncActionSyncing() {
+    ZeroFitnessTheme(dynamicColor = false) {
+        LibrarySyncAction(
+            pendingCount = 3,
+            isSyncing = true,
+            syncFailed = false,
+            onSync = {},
+        )
+    }
+}
+
+@Composable
+@Preview(name = "Sync Action — failed")
+private fun PreviewSyncActionFailed() {
+    ZeroFitnessTheme(dynamicColor = false) {
+        LibrarySyncAction(
+            pendingCount = 0,
+            isSyncing = false,
+            syncFailed = true,
             onSync = {},
         )
     }

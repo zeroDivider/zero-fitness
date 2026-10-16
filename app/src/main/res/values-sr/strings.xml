@@ -96,7 +96,7 @@
     <string name="library_app_bar_subtitle">Dodaj vežbe svojim tempom</string>
     <string name="library_add_exercise">+ Dodaj novu vežbu</string>
     <string name="library_empty">Još nema vežbi</string>
-    <string name="library_sync_action">Sinhronizuj vežbe</string>
+    <string name="library_sync_action">Sinhronizuj vežbe: %1$d</string>
     <string name="library_sync_syncing">Sinhronizacija vežbi</string>
     <string name="library_sync_failed_action">Sinhronizacija nije uspela, dodirni za ponovni pokušaj</string>
     <string name="library_filter_all">Sve</string>
