@@ -1,0 +1,26 @@
+---
+description: Keep documentation synced with feature plans and implementation changes
+alwaysApply: true
+---
+
+# Documentation Sync
+
+Every plan for a new feature or in-progress feature must include a documentation sync item.
+
+When a change affects user-facing behavior, setup, architecture, schema, screenshots, or feature status, update the relevant documentation in the same branch:
+
+- `README.md` for public-facing overview and high-level status.
+- `docs/ROADMAP.md` for planned milestones and feature status changes.
+- `docs/TECHNICAL_OVERVIEW.md` for architecture, data flow, or code-structure changes.
+- `docs/SETUP.md` for build, secrets, SDK, Supabase, or CI setup changes.
+- `docs/supabase/` for database schema and migration changes.
+- Demo screenshots or GIFs when a visible app flow changes.
+
+If no documentation update is needed, state that explicitly in the plan or summary.
+
+## Status Labels
+
+- `Planned`: work is not implemented yet.
+- `In progress`: implementation exists but needs more behavior, tests, polish, or docs.
+- `Done`: implementation, verification, and documentation are complete for the intended scope.
+- `Paused`: work started but is intentionally not active.
